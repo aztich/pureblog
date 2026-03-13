@@ -1,5 +1,10 @@
 <?php
-$settingsPath = trim(parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?? '', '/');
+$settingsUriPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?? '';
+$bp = base_path();
+if ($bp !== '' && str_starts_with($settingsUriPath, $bp)) {
+    $settingsUriPath = substr($settingsUriPath, strlen($bp));
+}
+$settingsPath = trim($settingsUriPath, '/');
 $settingsItems = [
     '/admin/settings-site.php' => ['label' => 'Site', 'icon' => 'globe'],
     '/admin/settings-theme.php' => ['label' => 'Theme', 'icon' => 'paintbrush'],
@@ -13,8 +18,8 @@ $settingsSaveFormId = $settingsSaveFormId ?? '';
     <?php foreach ($settingsItems as $href => $item): ?>
         <?php $isCurrent = $settingsPath === ltrim($href, '/'); ?>
         <li>
-            <a href="<?= e($href) ?>"<?= $isCurrent ? ' class="current"' : '' ?>>
-                <svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-<?= e($item['icon']) ?>"></use></svg>
+            <a href="<?= e($bp . $href) ?>"<?= $isCurrent ? ' class="current"' : '' ?>>
+                <svg class="icon" aria-hidden="true"><use href="#icon-<?= e($item['icon']) ?>"></use></svg>
                 <?= e($item['label']) ?>
             </a>
         </li>
@@ -22,7 +27,7 @@ $settingsSaveFormId = $settingsSaveFormId ?? '';
 </ul>
 <?php if ($settingsSaveFormId !== ''): ?>
     <button class="save" type="submit" form="<?= e($settingsSaveFormId) ?>" aria-label="Save settings">
-        <svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-save"></use></svg>
+        <svg class="icon" aria-hidden="true"><use href="#icon-save"></use></svg>
         Save settings
     </button>
 <?php endif; ?>

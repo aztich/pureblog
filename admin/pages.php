@@ -24,8 +24,8 @@ require __DIR__ . '/../includes/admin-head.php';
     <main class="mid">
         <h1>Pages</h1>
         <nav class="editor-actions">
-            <a href="/admin/edit-page.php?action=new">
-                <svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-file-plus-corner"></use></svg>
+            <a href="<?= base_path() ?>/admin/edit-page.php?action=new">
+                <svg class="icon" aria-hidden="true"><use href="#icon-file-plus-corner"></use></svg>
                 New page
             </a>
         </nav>
@@ -43,11 +43,11 @@ require __DIR__ . '/../includes/admin-head.php';
             <ul class="admin-list">
                 <?php foreach ($pages as $page): ?>
                     <li class="admin-list-item">
-                        <a class="admin-list-title" href="/admin/edit-page.php?slug=<?= e($page['slug']) ?>">
+                        <a class="admin-list-title" href="<?= base_path() ?>/admin/edit-page.php?slug=<?= e($page['slug']) ?>">
                             <?= e($page['title']) ?>
                         </a>
                         <div class="admin-list-meta">
-                            <span class="status <?= e($page['status']) ?>"><svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-toggle-right"></use></svg> <?= e($page['status']) ?></span>
+                            <span class="status <?= e($page['status']) ?>"><svg class="icon" aria-hidden="true"><use href="#icon-toggle-right"></use></svg> <?= e($page['status']) ?></span>
                         </div>
                     </li>
                 <?php endforeach; ?>

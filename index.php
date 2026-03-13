@@ -9,6 +9,10 @@ require_setup_redirect();
 // Basic request parsing + route flags.
 $config = load_config();
 $requestUriPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
+$bp = base_path();
+if ($bp !== '' && str_starts_with($requestUriPath, $bp)) {
+    $requestUriPath = substr($requestUriPath, strlen($bp));
+}
 $requestPath = trim(rawurldecode($requestUriPath), '/');
 $requestPathWithSlash = $requestPath === '' ? '/' : ('/' . $requestPath);
 
@@ -99,7 +103,7 @@ $blogFeedHidden = ($blogPageSlug === '__hidden__');
 
 if ($isSingle && $homepageSlug !== '' && $requestPath === $homepageSlug) {
     $queryString = $_SERVER['QUERY_STRING'] ?? '';
-    $location = '/' . ($queryString !== '' ? ('?' . $queryString) : '');
+    $location = base_path() . '/' . ($queryString !== '' ? ('?' . $queryString) : '');
     header('Location: ' . $location);
     exit;
 }
@@ -181,7 +185,7 @@ $postListLayout = $config['theme']['post_list_layout'] ?? 'excerpt';
                 <p>No posts found for this tag.</p>
             <?php else: ?>
                 <?php
-                $paginationBase = '/tag/' . rawurlencode($tagSlug);
+                $paginationBase = base_path() . '/tag/' . rawurlencode($tagSlug);
                 require __DIR__ . '/includes/post-list.php';
                 ?>
             <?php endif; ?>
@@ -190,7 +194,7 @@ $postListLayout = $config['theme']['post_list_layout'] ?? 'excerpt';
             <!-- Home page list view -->
             <?php if (!$blogFeedHidden): ?>
                 <?php
-                $paginationBase = '/';
+                $paginationBase = base_path() . '/';
                 require __DIR__ . '/includes/post-list.php';
                 ?>
             <?php endif; ?>

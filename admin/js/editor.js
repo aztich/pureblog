@@ -180,13 +180,13 @@
     const statusValue = statusField?.value ?? '';
     const slugValue = (slugField?.value ?? '').trim();
     if (statusValue === 'published' && slugValue !== '') {
-      window.open(`/${encodeURIComponent(slugValue)}`, '_blank');
+      window.open(`${config.basePath || ''}/${encodeURIComponent(slugValue)}`, '_blank');
       return;
     }
 
     const form = document.createElement('form');
     form.method = 'post';
-    form.action = '/admin/preview.php';
+    form.action = (config.basePath || '') + '/admin/preview.php';
     form.target = '_blank';
 
     const fields = [
@@ -299,7 +299,7 @@
         }
         formData.append('csrf_token', config.csrfToken || '');
 
-        const response = await fetch('/admin/upload-image.php', {
+        const response = await fetch((config.basePath || '') + '/admin/upload-image.php', {
           method: 'POST',
           body: formData,
         });

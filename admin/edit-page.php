@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['admin_action_id'])) 
         );
         if ($saved) {
             $redirectSlug = $page['slug'] === '' ? slugify($page['title']) : $page['slug'];
-            header('Location: /admin/edit-page.php?slug=' . urlencode($redirectSlug) . '&saved=1');
+            header('Location: ' . base_path() . '/admin/edit-page.php?slug=' . urlencode($redirectSlug) . '&saved=1');
             exit;
         }
         $errors[] = $saveError !== '' ? $saveError : 'Unable to save page.';
@@ -140,16 +140,16 @@ require __DIR__ . '/../includes/admin-head.php';
 
                     <nav class="editor-actions">
                         <button class="save" type="submit" form="page-form" aria-label="Save page">
-                            <svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-save"></use></svg>
+                            <svg class="icon" aria-hidden="true"><use href="#icon-save"></use></svg>
                             Save page
                         </button>
                         <button type="button" id="preview-button" aria-label="Preview page">
-                            <svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-eye"></use></svg>
+                            <svg class="icon" aria-hidden="true"><use href="#icon-eye"></use></svg>
                             Preview page
                         </button>
                         <?php if ($isEditing && $page['slug'] !== ''): ?>
                             <button type="submit" form="delete-page-form" class="link-button delete" aria-label="Delete page" onclick="return confirm('Delete this page?');">
-                                <svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-circle-x"></use></svg>
+                                <svg class="icon" aria-hidden="true"><use href="#icon-circle-x"></use></svg>
                                 Delete page
                             </button>
                         <?php endif; ?>
@@ -162,7 +162,7 @@ require __DIR__ . '/../includes/admin-head.php';
                     <textarea id="content" name="content" rows="18"><?= e($page['content']) ?></textarea>
                 </form>
                 <?php if ($isEditing && $page['slug'] !== ''): ?>
-                    <form method="post" action="/admin/delete-page.php" id="delete-page-form">
+                    <form method="post" action="<?= base_path() ?>/admin/delete-page.php" id="delete-page-form">
                         <input type="hidden" name="slug" value="<?= e($page['slug']) ?>">
                         <?= csrf_field() ?>
                     </form>
@@ -195,14 +195,14 @@ require __DIR__ . '/../includes/admin-head.php';
                 <section class="sidebar-section">
                     <div class="section-divider">
                         <span class="title">Images</span>
-                    <form method="post" action="/admin/upload-image.php" enctype="multipart/form-data" class="upload-form">
+                    <form method="post" action="<?= base_path() ?>/admin/upload-image.php" enctype="multipart/form-data" class="upload-form">
                         <input type="hidden" name="slug" value="<?= e($page['slug']) ?>">
                         <input type="hidden" name="editor_type" value="page">
                         <?= csrf_field() ?>
                         <label class="hidden" for="image">Upload image</label>
                         <input type="file" id="image" name="image" accept="image/*">
                         <button type="submit" disabled>
-                            <svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-upload"></use></svg>
+                            <svg class="icon" aria-hidden="true"><use href="#icon-upload"></use></svg>
                             Upload
                         </button>
                     </form>
@@ -214,13 +214,13 @@ require __DIR__ . '/../includes/admin-head.php';
                             <?php foreach ($images as $image): ?>
                                 <li>
                                     <code><?= e($image['filename']) ?></code>
-                                    <button type="button" class="link-button copy-markdown" data-markdown="<?= e($image['markdown']) ?>"><svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-copy"></use></svg> Copy</button>
-                                <form method="post" action="/admin/delete-image.php" class="inline-form" onsubmit="return confirm('Delete this image?');">
+                                    <button type="button" class="link-button copy-markdown" data-markdown="<?= e($image['markdown']) ?>"><svg class="icon" aria-hidden="true"><use href="#icon-copy"></use></svg> Copy</button>
+                                <form method="post" action="<?= base_path() ?>/admin/delete-image.php" class="inline-form" onsubmit="return confirm('Delete this image?');">
                                     <input type="hidden" name="slug" value="<?= e($page['slug']) ?>">
                                     <input type="hidden" name="editor_type" value="page">
                                     <input type="hidden" name="filename" value="<?= e($image['filename']) ?>">
                                     <?= csrf_field() ?>
-                                    <button type="submit" class="link-button delete"><svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-circle-x"></use></svg> Delete</button>
+                                    <button type="submit" class="link-button delete"><svg class="icon" aria-hidden="true"><use href="#icon-circle-x"></use></svg> Delete</button>
                                 </form>
                                 </li>
                             <?php endforeach; ?>
@@ -236,7 +236,8 @@ require __DIR__ . '/../includes/admin-head.php';
             editorType: 'page',
             formId: 'page-form',
             csrfToken: '<?= e(csrf_token()) ?>',
+            basePath: '<?= e(base_path()) ?>',
         };
     </script>
-    <script src="/admin/js/editor.js?v=<?= e((string) @filemtime(__DIR__ . '/js/editor.js')) ?>"></script>
+    <script src="<?= base_path() ?>/admin/js/editor.js?v=<?= e((string) @filemtime(__DIR__ . '/js/editor.js')) ?>"></script>
 <?php require __DIR__ . '/../includes/admin-footer.php'; ?>

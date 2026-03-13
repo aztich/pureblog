@@ -17,7 +17,7 @@ $lockoutUntil = (int) ($_SESSION['lockout_until'] ?? 0);
 $isLockedOut = $lockoutUntil > $now;
 
 if (is_admin_logged_in()) {
-    header('Location: /admin/dashboard.php');
+    header('Location: ' . base_path() . '/admin/dashboard.php');
     exit;
 }
 
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['is_admin'] = true;
             $_SESSION['login_failures'] = 0;
             $_SESSION['lockout_until'] = 0;
-            header('Location: /admin/dashboard.php');
+            header('Location: ' . base_path() . '/admin/dashboard.php');
             exit;
         }
 
@@ -74,7 +74,7 @@ require __DIR__ . '/../includes/admin-head.php';
 
             <label for="password">Password</label>
             <input type="password" id="password" name="password" required<?= $isLockedOut ? ' disabled' : '' ?>>
-            <button type="submit"<?= $isLockedOut ? ' disabled' : '' ?>><svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-circle-check"></use></svg> Log in</button>
+            <button type="submit"<?= $isLockedOut ? ' disabled' : '' ?>><svg class="icon" aria-hidden="true"><use href="#icon-circle-check"></use></svg> Log in</button>
         </form>
     </main>
 <?php require __DIR__ . '/../includes/admin-footer.php'; ?>

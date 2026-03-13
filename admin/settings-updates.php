@@ -855,12 +855,12 @@ require __DIR__ . '/../includes/admin-head.php';
             <?php endif; ?>
             <p><strong>Repository:</strong> <a href="https://github.com/kevquirk/pureblog" target="_blank" rel="noopener noreferrer">github.com/kevquirk/pureblog</a></p>
             <p>
-                <a class="button" href="/admin/settings-updates.php?check=1">
-                    <svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-upgrade"></use></svg>
+                <a class="button" href="<?= base_path() ?>/admin/settings-updates.php?check=1">
+                    <svg class="icon" aria-hidden="true"><use href="#icon-upgrade"></use></svg>
                     Check latest release
                 </a>
-                <a class="button" href="/admin/settings-updates.php?package_plan=1">
-                    <svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-eye"></use></svg>
+                <a class="button" href="<?= base_path() ?>/admin/settings-updates.php?package_plan=1">
+                    <svg class="icon" aria-hidden="true"><use href="#icon-eye"></use></svg>
                     Inspect release package
                 </a>
             </p>
@@ -927,10 +927,10 @@ require __DIR__ . '/../includes/admin-head.php';
                 </ul>
             <?php endif; ?>
 
-            <form method="post" action="/admin/settings-updates.php" onsubmit="return confirm('Apply latest update now? This will replace core files and keep /config, /content, /data, and all .htaccess files.');">
+            <form method="post" action="<?= base_path() ?>/admin/settings-updates.php" onsubmit="return confirm('Apply latest update now? This will replace core files and keep /config, /content, /data, and all .htaccess files.');">
                 <?= csrf_field() ?>
                 <button class="button save" type="submit" name="apply_update" value="1">
-                    <svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-upgrade"></use></svg>
+                    <svg class="icon" aria-hidden="true"><use href="#icon-upgrade"></use></svg>
                     Apply latest update
                 </button>
             </form>
@@ -942,7 +942,7 @@ require __DIR__ . '/../includes/admin-head.php';
         <section class="section-divider">
             <span class="title">Backup restore</span>
             <p>Backups in <code>/backup</code> are excluded from updates and can be used for rollback.</p>
-            <form method="post" action="/admin/settings-updates.php">
+            <form method="post" action="<?= base_path() ?>/admin/settings-updates.php">
                 <?= csrf_field() ?>
                 <label for="backup-name">Available backups</label>
                 <select id="backup-name" name="backup_name" required>
@@ -951,11 +951,11 @@ require __DIR__ . '/../includes/admin-head.php';
                     <?php endforeach; ?>
                 </select>
                 <button class="button" type="submit" name="restore_backup" value="1" onclick="return confirm('Restore this backup now? Current core files will be replaced.');">
-                    <svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-upgrade"></use></svg>
+                    <svg class="icon" aria-hidden="true"><use href="#icon-upgrade"></use></svg>
                     Restore selected backup
                 </button>
                 <button class="button delete" type="submit" name="delete_backup" value="1" onclick="return confirm('Delete this backup permanently? This cannot be undone.');">
-                    <svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-circle-x"></use></svg>
+                    <svg class="icon" aria-hidden="true"><use href="#icon-circle-x"></use></svg>
                     Delete selected backup
                 </button>
             </form>

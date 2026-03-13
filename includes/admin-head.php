@@ -34,9 +34,11 @@ unset($_SESSION['admin_action_flash']);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="<?= e($config['assets']['favicon'] ?? '/assets/images/favicon.png') ?>">
+    <?php $adminFavicon = $config['assets']['favicon'] ?? '/assets/images/favicon.png'; ?>
+    <?php if ($adminFavicon[0] === '/') { $adminFavicon = base_path() . $adminFavicon; } ?>
+    <link rel="icon" href="<?= e($adminFavicon) ?>">
     <title><?= e($adminTitle) ?></title>
-    <link rel="stylesheet" href="/admin/css/admin.css?v=<?= e($adminCssVersion) ?>">
+    <link rel="stylesheet" href="<?= base_path() ?>/admin/css/admin.css?v=<?= e($adminCssVersion) ?>">
     <style>
         :root {
             --font-stack: <?= $fontStack ?>;
@@ -66,22 +68,27 @@ unset($_SESSION['admin_action_flash']);
     <?php readfile(__DIR__ . '/../admin/icons/sprite.svg'); ?>
     <?php if (!$hideAdminNav): ?>
         <?php
-        $adminPath = trim(parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?? '', '/');
+        $adminUriPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?? '';
+        $bp = base_path();
+        if ($bp !== '' && str_starts_with($adminUriPath, $bp)) {
+            $adminUriPath = substr($adminUriPath, strlen($bp));
+        }
+        $adminPath = trim($adminUriPath, '/');
         $isSettings = str_starts_with($adminPath, 'admin/settings');
         ?>
         <nav class="admin-nav" aria-label="Admin">
             <ul class="admin-nav-list">
-                <li><a href="/admin/dashboard.php"<?= $adminPath === 'admin/dashboard.php' ? ' class="current"' : '' ?>><svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-circle-gauge"></use></svg> Dashboard</a></li>
-                <li><a href="/admin/pages.php"<?= $adminPath === 'admin/pages.php' ? ' class="current"' : '' ?>><svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-file-text"></use></svg> Pages</a></li>
-                <li><a href="/admin/settings-site.php"<?= $isSettings ? ' class="current"' : '' ?>><svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-settings"></use></svg> Settings</a></li>
-                <li><a target="_blank" rel="noopener noreferrer" href="/"><svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-eye"></use></svg> View site</a></li>
+                <li><a href="<?= base_path() ?>/admin/dashboard.php"<?= $adminPath === 'admin/dashboard.php' ? ' class="current"' : '' ?>><svg class="icon" aria-hidden="true"><use href="#icon-circle-gauge"></use></svg> Dashboard</a></li>
+                <li><a href="<?= base_path() ?>/admin/pages.php"<?= $adminPath === 'admin/pages.php' ? ' class="current"' : '' ?>><svg class="icon" aria-hidden="true"><use href="#icon-file-text"></use></svg> Pages</a></li>
+                <li><a href="<?= base_path() ?>/admin/settings-site.php"<?= $isSettings ? ' class="current"' : '' ?>><svg class="icon" aria-hidden="true"><use href="#icon-settings"></use></svg> Settings</a></li>
+                <li><a target="_blank" rel="noopener noreferrer" href="<?= base_path() ?>/"><svg class="icon" aria-hidden="true"><use href="#icon-eye"></use></svg> View site</a></li>
                 <?php if (!empty($config['cache']['enabled'])): ?>
                     <li>
                         <form method="post" action="<?= e($_SERVER['REQUEST_URI'] ?? '/admin/dashboard.php') ?>" class="inline-form">
                             <?= csrf_field() ?>
                             <input type="hidden" name="admin_action_id" value="clear_cache">
                             <button class="delete" type="submit" class="link-button">
-                                <svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-circle-x"></use></svg>
+                                <svg class="icon" aria-hidden="true"><use href="#icon-circle-x"></use></svg>
                                 Clear cache
                             </button>
                         </form>
@@ -98,7 +105,7 @@ unset($_SESSION['admin_action_flash']);
                             <input type="hidden" name="admin_action_id" value="<?= e($actionButton['id']) ?>">
                             <button type="submit" class="<?= e($buttonClass) ?>"<?= $confirmAttr ?>>
                                 <?php if ($actionButton['icon'] !== ''): ?>
-                                    <svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-<?= e($actionButton['icon']) ?>"></use></svg>
+                                    <svg class="icon" aria-hidden="true"><use href="#icon-<?= e($actionButton['icon']) ?>"></use></svg>
                                 <?php endif; ?>
                                 <?= e($actionButton['label']) ?>
                             </button>
@@ -106,10 +113,10 @@ unset($_SESSION['admin_action_flash']);
                     </li>
                 <?php endforeach; ?>
                 <li>
-                    <form method="post" action="/admin/logout.php" class="inline-form">
+                    <form method="post" action="<?= base_path() ?>/admin/logout.php" class="inline-form">
                         <?= csrf_field() ?>
                         <button type="submit" class="link-button delete">
-                            <svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-log-out"></use></svg>
+                            <svg class="icon" aria-hidden="true"><use href="#icon-log-out"></use></svg>
                             Log out
                         </button>
                     </form>

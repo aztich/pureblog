@@ -131,19 +131,19 @@ require __DIR__ . '/../includes/admin-head.php';
         <nav class="editor-actions">
             <?php if ($availableLayouts): ?>
                 <button type="button" id="new-post-button">
-                    <svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-file-plus-corner"></use></svg>
+                    <svg class="icon" aria-hidden="true"><use href="#icon-file-plus-corner"></use></svg>
                     New post
                 </button>
                 <dialog id="layout-picker" aria-labelledby="layout-picker-title">
                     <h2 id="layout-picker-title">Choose a layout</h2>
                     <ul class="layout-picker-list">
-                        <li><a href="/admin/edit-post.php?action=new">Default post</a></li>
+                        <li><a href="<?= base_path() ?>/admin/edit-post.php?action=new">Default post</a></li>
                         <?php foreach ($availableLayouts as $layout): ?>
-                            <li><a href="/admin/edit-post.php?action=new&amp;layout=<?= urlencode($layout['name']) ?>"><?= e($layout['label']) ?></a></li>
+                            <li><a href="<?= base_path() ?>/admin/edit-post.php?action=new&amp;layout=<?= urlencode($layout['name']) ?>"><?= e($layout['label']) ?></a></li>
                         <?php endforeach; ?>
                     </ul>
                     <button type="button" id="layout-picker-close" class="delete">
-                        <svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-circle-x"></use></svg>
+                        <svg class="icon" aria-hidden="true"><use href="#icon-circle-x"></use></svg>
                         Cancel
                     </button>
                 </dialog>
@@ -158,8 +158,8 @@ require __DIR__ . '/../includes/admin-head.php';
                 })();
                 </script>
             <?php else: ?>
-                <a href="/admin/edit-post.php?action=new">
-                    <svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-file-plus-corner"></use></svg>
+                <a href="<?= base_path() ?>/admin/edit-post.php?action=new">
+                    <svg class="icon" aria-hidden="true"><use href="#icon-file-plus-corner"></use></svg>
                     New post
                 </a>
             <?php endif; ?>
@@ -181,12 +181,12 @@ require __DIR__ . '/../includes/admin-head.php';
             <ul class="admin-list">
                 <?php foreach ($posts as $post): ?>
                     <li class="admin-list-item">
-                        <a class="admin-list-title" href="/admin/edit-post.php?slug=<?= e($post['slug']) ?>">
+                        <a class="admin-list-title" href="<?= base_path() ?>/admin/edit-post.php?slug=<?= e($post['slug']) ?>">
                             <?= e($post['title']) ?>
                         </a>
                         <div class="admin-list-meta">
-                            <span><svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-calendar"></use></svg> <?= e(format_datetime_for_display((string) ($post['date'] ?? ''), $config, 'Y-m-d @ H:i')) ?></span>
-                            <span class="status <?= e($post['status']) ?>"><svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-toggle-right"></use></svg> <?= e($post['status']) ?></span>
+                            <span><svg class="icon" aria-hidden="true"><use href="#icon-calendar"></use></svg> <?= e(format_datetime_for_display((string) ($post['date'] ?? ''), $config, 'Y-m-d @ H:i')) ?></span>
+                            <span class="status <?= e($post['status']) ?>"><svg class="icon" aria-hidden="true"><use href="#icon-toggle-right"></use></svg> <?= e($post['status']) ?></span>
                         </div>
                     </li>
                 <?php endforeach; ?>
@@ -195,10 +195,10 @@ require __DIR__ . '/../includes/admin-head.php';
                 <?php $searchQuery = $search !== '' ? '&q=' . urlencode($search) : ''; ?>
                 <nav class="pagination">
                     <?php if ($page > 1): ?>
-                        <a href="/admin/dashboard.php?page=<?= e((string) ($page - 1)) ?><?= $searchQuery ?>">&larr; Newer posts</a>
+                        <a href="<?= base_path() ?>/admin/dashboard.php?page=<?= e((string) ($page - 1)) ?><?= $searchQuery ?>">&larr; Newer posts</a>
                     <?php endif; ?>
                     <?php if ($page < $totalPages): ?>
-                        <a href="/admin/dashboard.php?page=<?= e((string) ($page + 1)) ?><?= $searchQuery ?>">Older posts &rarr;</a>
+                        <a href="<?= base_path() ?>/admin/dashboard.php?page=<?= e((string) ($page + 1)) ?><?= $searchQuery ?>">Older posts &rarr;</a>
                     <?php endif; ?>
                 </nav>
             <?php endif; ?>

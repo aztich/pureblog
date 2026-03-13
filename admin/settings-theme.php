@@ -220,7 +220,7 @@ require __DIR__ . '/../includes/admin-head.php';
                     </div>
                 </div>
                 <button class="link-button delete" type="submit" form="settings-form" name="reset_theme_light" value="1" aria-label="Reset light mode colors to defaults" onclick="return confirm('Reset light mode colors to defaults?');">
-                    <svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-circle-x"></use></svg>
+                    <svg class="icon" aria-hidden="true"><use href="#icon-circle-x"></use></svg>
                     Reset light colors
                 </button>
 
@@ -248,7 +248,7 @@ require __DIR__ . '/../includes/admin-head.php';
                     </div>
                 </div>
                 <button class="link-button delete" type="submit" form="settings-form" name="reset_theme_dark" value="1" aria-label="Reset dark mode colors to defaults" onclick="return confirm('Reset dark mode colors to defaults?');">
-                    <svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-circle-x"></use></svg>
+                    <svg class="icon" aria-hidden="true"><use href="#icon-circle-x"></use></svg>
                     Reset dark colors
                 </button>
             </section>
@@ -260,24 +260,24 @@ require __DIR__ . '/../includes/admin-head.php';
                     <label class="layout-choice" for="post_list_excerpt">
                         <input type="radio" id="post_list_excerpt" name="post_list_layout" value="excerpt" <?= ($config['theme']['post_list_layout'] ?? 'excerpt') === 'excerpt' ? 'checked' : '' ?>>
                         <picture class="layout-preview">
-                            <source srcset="/admin/images/layouts/layout-excerpt-dark.png" media="(prefers-color-scheme: dark)">
-                            <img src="/admin/images/layouts/layout-excerpt-light.png" alt="Post excerpt layout preview" loading="lazy">
+                            <source srcset="<?= base_path() ?>/admin/images/layouts/layout-excerpt-dark.png" media="(prefers-color-scheme: dark)">
+                            <img src="<?= base_path() ?>/admin/images/layouts/layout-excerpt-light.png" alt="Post excerpt layout preview" loading="lazy">
                         </picture>
                         <span>Post excerpt</span>
                     </label>
                     <label class="layout-choice" for="post_list_full">
                         <input type="radio" id="post_list_full" name="post_list_layout" value="full" <?= ($config['theme']['post_list_layout'] ?? 'excerpt') === 'full' ? 'checked' : '' ?>>
                         <picture class="layout-preview">
-                            <source srcset="/admin/images/layouts/layout-full-dark.png" media="(prefers-color-scheme: dark)">
-                            <img src="/admin/images/layouts/layout-full-light.png" alt="Full post layout preview" loading="lazy">
+                            <source srcset="<?= base_path() ?>/admin/images/layouts/layout-full-dark.png" media="(prefers-color-scheme: dark)">
+                            <img src="<?= base_path() ?>/admin/images/layouts/layout-full-light.png" alt="Full post layout preview" loading="lazy">
                         </picture>
                         <span>Full post</span>
                     </label>
                     <label class="layout-choice" for="post_list_archive">
                         <input type="radio" id="post_list_archive" name="post_list_layout" value="archive" <?= ($config['theme']['post_list_layout'] ?? 'excerpt') === 'archive' ? 'checked' : '' ?>>
                         <picture class="layout-preview">
-                            <source srcset="/admin/images/layouts/layout-archive-dark.png" media="(prefers-color-scheme: dark)">
-                            <img src="/admin/images/layouts/layout-archive-light.png" alt="Archive layout preview" loading="lazy">
+                            <source srcset="<?= base_path() ?>/admin/images/layouts/layout-archive-dark.png" media="(prefers-color-scheme: dark)">
+                            <img src="<?= base_path() ?>/admin/images/layouts/layout-archive-light.png" alt="Archive layout preview" loading="lazy">
                         </picture>
                         <span>Date & title</span>
                     </label>

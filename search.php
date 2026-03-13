@@ -42,7 +42,7 @@ render_masthead_layout($config, ['page' => $page ?? null]);
 ?>
     <main>
         <h1 >Search</h1>
-        <form class="site-search-form" method="get" action="/search.php">
+        <form class="site-search-form" method="get" action="<?= base_path() ?>/search.php">
             <label class="hidden" for="search-query">Search posts</label>
             <input type="search" id="search-query" name="q" value="<?= e($query) ?>" placeholder="Search posts">
             <button type="submit">Search</button>

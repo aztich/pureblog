@@ -222,7 +222,7 @@ function is_installed(): bool
 function require_setup_redirect(): void
 {
     if (!is_installed()) {
-        header('Location: /setup.php');
+        header('Location: ' . base_path() . '/setup.php');
         exit;
     }
 }
@@ -278,9 +278,41 @@ function is_admin_logged_in(): bool
 function require_admin_login(): void
 {
     if (!is_admin_logged_in()) {
-        header('Location: /admin/index.php');
+        header('Location: ' . base_path() . '/admin/index.php');
         exit;
     }
+}
+
+function base_path(): string
+{
+    static $cached = null;
+    if ($cached !== null) {
+        return $cached;
+    }
+
+    if (PHP_SAPI === 'cli-server') {
+        return $cached = '';
+    }
+
+    $config = load_config();
+    $configuredBase = trim((string) ($config['base_url'] ?? ''));
+    if ($configuredBase !== '') {
+        $parsed = parse_url($configuredBase);
+        if (is_array($parsed)) {
+            return $cached = rtrim((string) ($parsed['path'] ?? ''), '/');
+        }
+    }
+
+    // Derive path prefix from where functions.php lives relative to the document root.
+    $docRoot = realpath($_SERVER['DOCUMENT_ROOT'] ?? '') ?: '';
+    $appRoot = realpath(__DIR__) ?: __DIR__;
+    if ($docRoot !== '' && str_starts_with($appRoot, $docRoot)) {
+        $rel = substr($appRoot, strlen($docRoot));
+        $rel = str_replace('\\', '/', $rel);
+        return $cached = rtrim($rel, '/');
+    }
+
+    return $cached = '';
 }
 
 function get_base_url(): string
@@ -306,9 +338,8 @@ function get_base_url(): string
     if (!preg_match('/^[a-z0-9.-]+(:\d+)?$/', $host)) {
         $host = 'localhost';
     }
-    $path = rtrim(str_replace('/setup.php', '', $_SERVER['SCRIPT_NAME'] ?? ''), '/');
 
-    return $scheme . '://' . $host . $path;
+    return $scheme . '://' . $host . base_path();
 }
 
 function e(string $value): string
@@ -1330,7 +1361,7 @@ function render_tag_links(array $tags): string
     $links = [];
     foreach ($tags as $tag) {
         $slug = normalize_tag($tag);
-        $links[] = '<a href="/tag/' . e(rawurlencode($slug)) . '">' . e($tag) . '</a>';
+        $links[] = '<a href="' . base_path() . '/tag/' . e(rawurlencode($slug)) . '">' . e($tag) . '</a>';
     }
 
     return implode(', ', $links);
@@ -1424,7 +1455,12 @@ function render_masthead_layout(array $config, array $context = []): void
     $mastheadPath = resolve_layout_file('masthead') ?? (PUREBLOG_BASE_PATH . '/includes/masthead.php');
 
     $siteTagline = trim((string) ($config['site_tagline'] ?? ''));
-    $currentPath = trim(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '', '/');
+    $uriPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
+    $bp = base_path();
+    if ($bp !== '' && str_starts_with($uriPath, $bp)) {
+        $uriPath = substr($uriPath, strlen($bp));
+    }
+    $currentPath = trim($uriPath, '/');
     $navPages = get_all_pages(false);
     $navPages = array_values(array_filter($navPages, fn($page) => ($page['include_in_nav'] ?? true)));
     $customNavItems = array_values(array_filter(parse_custom_nav($config['custom_nav'] ?? ''), function (array $item): bool {

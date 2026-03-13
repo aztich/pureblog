@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['admin_action_id'])) 
     } elseif (!delete_post_by_slug($slug)) {
         $errors[] = 'Unable to delete post.';
     } else {
-        header('Location: /admin/dashboard.php?deleted=1');
+        header('Location: ' . base_path() . '/admin/dashboard.php?deleted=1');
         exit;
     }
 } else {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 require __DIR__ . '/functions.php';
 
 if (is_installed()) {
-    header('Location: /admin/index.php');
+    header('Location: ' . base_path() . '/admin/index.php');
     exit;
 }
 
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!is_dir($configDir) && !mkdir($configDir, 0755, true)) {
             $errors[] = 'Failed to create config directory. Check permissions.';
         } elseif (save_config($config)) {
-            header('Location: /admin/index.php?setup=1', true, 303);
+            header('Location: ' . base_path() . '/admin/index.php?setup=1', true, 303);
             exit;
         }
 
@@ -98,7 +98,7 @@ require __DIR__ . '/includes/admin-head.php';
 
             <label for="confirm_password">Confirm password</label>
             <input type="password" id="confirm_password" name="confirm_password" required>
-            <p><button type="submit"><svg class="icon" aria-hidden="true"><use href="/admin/icons/sprite.svg#icon-circle-check"></use></svg> Create Site</button></p>
+            <p><button type="submit"><svg class="icon" aria-hidden="true"><use href="#icon-circle-check"></use></svg> Create Site</button></p>
         </form>
     </main>
 <?php require __DIR__ . '/includes/admin-footer.php'; ?>
