@@ -32,7 +32,7 @@ $siteTitle = $config['site_title'] ?? 'My Blog';
 $siteTagline = $config['site_tagline'] ?? '';
 $baseUrl = rtrim($baseUrl, '/');
 
-function absolutize_feed_html(string $html, string $baseUrl): string
+function absolutize_feed_html(string $html, string $baseUrl, string $postUrl = ''): string
 {
     $patterns = [
         '/href=\"\\//i',
@@ -43,17 +43,26 @@ function absolutize_feed_html(string $html, string $baseUrl): string
         'src="' . $baseUrl . '/',
     ];
 
-    return preg_replace($patterns, $replacements, $html) ?? $html;
+    $html = preg_replace($patterns, $replacements, $html) ?? $html;
+
+    if ($postUrl !== '') {
+        $html = preg_replace('/href="#/i', 'href="' . $postUrl . '#', $html) ?? $html;
+    }
+
+    return $html;
 }
 
 header('Content-Type: application/rss+xml; charset=UTF-8');
 
 echo '<?xml version="1.0" encoding="UTF-8"?>';
 ?>
-<rss version="2.0">
+<rss version="2.0"
+    xmlns:content="http://purl.org/rss/1.0/modules/content/"
+    xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title><?= e($siteTitle) ?></title>
         <link><?= e($baseUrl) ?></link>
+        <atom:link href="<?= e($baseUrl) ?>/feed" rel="self" type="application/rss+xml"/>
         <description><?= e($siteTagline !== '' ? $siteTagline : $siteTitle) ?></description>
         <language><?= e($config['language'] ?? 'en') ?></language>
         <?php foreach ($posts as $post): ?>
@@ -61,7 +70,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
             $postUrl = $baseUrl . '/' . $post['slug'];
             $pubDate = format_post_date_for_rss((string) ($post['date'] ?? ''), $config);
             $content = render_markdown($post['content'], ['post_title' => (string) ($post['title'] ?? '')]);
-            $content = absolutize_feed_html($content, $baseUrl);
+            $content = absolutize_feed_html($content, $baseUrl, $postUrl);
             ?>
             <item>
                 <title><?= e($post['title']) ?></title>
