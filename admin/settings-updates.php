@@ -928,6 +928,12 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && !isset($_POST['admin_act
             );
             if (($applyResult['ok'] ?? false) && !empty($latestForApply['tag'])) {
                 $currentVersionDisplay = normalize_version_label((string) $latestForApply['tag']);
+                // Redirect after a successful update so the result page loads
+                // with the newly written files rather than the in-memory copies
+                // from before the update ran.
+                $_SESSION['admin_action_flash'] = ['ok' => true, 'message' => 'Update applied successfully.'];
+                header('Location: ' . base_path() . '/admin/settings-updates.php?updated=1');
+                exit;
             }
         }
     } elseif (isset($_POST['restore_backup'])) {
