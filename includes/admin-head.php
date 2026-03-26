@@ -161,7 +161,7 @@ unset($_SESSION['admin_action_flash']);
         $searchSlug = trim((string) ($config['search_page_slug'] ?? 'search'));
         if ($searchSlug !== '' && empty($config['search_page_notified']) && get_page_by_slug($searchSlug) === null):
         ?>
-            <p class="notice">
+            <div class="notice">
                 <?= e(t('admin.settings.site.notice_search_missing', ['slug' => $searchSlug])) ?>
                 <form method="post" action="<?= e($_SERVER['REQUEST_URI'] ?? '') ?>" style="display:inline">
                     <?= csrf_field() ?>
@@ -173,6 +173,6 @@ unset($_SESSION['admin_action_flash']);
                     <input type="hidden" name="search_page_action" value="dismiss">
                     <button type="submit" class="autosave-btn delete"><?= e(t('admin.settings.site.dismiss_search_notice')) ?></button>
                 </form>
-            </p>
+            </div>
         <?php endif; ?>
     <?php endif; ?>
