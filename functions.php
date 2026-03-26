@@ -66,6 +66,7 @@ function default_config(): array
         'homepage_slug' => '',
         'blog_page_slug' => '',
         'search_page_slug' => 'search',
+        'search_page_notified' => false,
 
         'base_url' => '',
         'language' => 'en',
