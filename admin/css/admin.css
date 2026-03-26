@@ -167,10 +167,36 @@ a:hover {
 
 .notice {
     padding: 1rem;
-    border: 1px solid var(--green);
-    color: var(--green);
-    background: var(--input-bg);
+    border: 2px solid var(--green);
+    color: var(--text-color);
+    background: #eff7ef;
     margin-bottom: 1.5rem;
+}
+
+html[data-admin-theme="dark"] .notice {
+    background: rgba(163, 190, 140, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+    html[data-admin-theme="auto"] .notice {
+        background: rgba(163, 190, 140, 0.1);
+    }
+}
+
+.notice.delete {
+    border-color: var(--red);
+    background: #fff5f5;
+    color: var(--text-color);
+}
+
+html[data-admin-theme="dark"] .notice.delete {
+    background: rgba(255, 138, 128, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+    html[data-admin-theme="auto"] .notice.delete {
+        background: rgba(255, 138, 128, 0.1);
+    }
 }
 
 .notice ul {
@@ -947,4 +973,36 @@ html[data-admin-theme="dark"] .cm-s-default .cm-meta {
 .tag-suggestions li.active {
     background: var(--text-color);
     color: var(--bg-color);
+}
+
+.autosave-restore-notice {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    flex-wrap: wrap;
+}
+
+.autosave-btn {
+    border: 1px solid currentColor;
+    border-radius: var(--border-radius);
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+    padding: 0.1em 0.6em;
+}
+
+.autosave-preview {
+    background: var(--accent-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    margin-bottom: 1em;
+    padding: 1em;
+}
+
+.autosave-preview-content {
+    margin: 0.5em 0 0;
+    max-height: 300px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
 }

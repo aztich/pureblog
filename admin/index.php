@@ -65,7 +65,7 @@ require __DIR__ . '/../includes/admin-head.php';
             <p><?= e(t('admin.login.setup_complete')) ?></p>
         <?php endif; ?>
         <?php if ($error !== ''): ?>
-            <p class="notice"><?= e($error) ?></p>
+            <p class="notice delete"><?= e($error) ?></p>
         <?php endif; ?>
         <form method="post">
             <?= csrf_field() ?>

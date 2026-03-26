@@ -51,6 +51,22 @@ if ($action === 'new') {
     $originalSlug = '';
 }
 
+$autosaveData = null;
+if ($isEditing && $originalSlug !== '') {
+    $autosavePath = PUREBLOG_BASE_PATH . '/content/autosaves/page-' . $originalSlug . '.json';
+    if (is_file($autosavePath)) {
+        $raw     = file_get_contents($autosavePath);
+        $decoded = $raw !== false ? json_decode($raw, true) : null;
+        if (is_array($decoded)) {
+            if (($decoded['content'] ?? '') !== $page['content'] || ($decoded['title'] ?? '') !== $page['title']) {
+                $autosaveData = $decoded;
+            } else {
+                @unlink($autosavePath);
+            }
+        }
+    }
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['admin_action_id'])) {
     $page['title'] = trim($_POST['title'] ?? '');
     $page['slug'] = trim($_POST['slug'] ?? '');
@@ -82,6 +98,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['admin_action_id'])) 
         );
         if ($saved) {
             $redirectSlug = $page['slug'] === '' ? slugify($page['title']) : $page['slug'];
+            $autosaveDir = PUREBLOG_BASE_PATH . '/content/autosaves';
+            @unlink($autosaveDir . '/page-' . $originalSlug . '.json');
+            @unlink($autosaveDir . '/page-' . $redirectSlug . '.json');
             header('Location: ' . base_path() . '/admin/edit-page.php?slug=' . urlencode($redirectSlug) . '&saved=1');
             exit;
         }
@@ -118,7 +137,7 @@ require __DIR__ . '/../includes/admin-head.php';
         <div class="editor-grid">
             <section class="editor-main">
                 <?php if ($errors): ?>
-                    <div class="notice">
+                    <div class="notice delete">
                         <ul>
                             <?php foreach ($errors as $error): ?>
                                 <li><?= e($error) ?></li>
@@ -133,7 +152,7 @@ require __DIR__ . '/../includes/admin-head.php';
                     <p class="notice" data-auto-dismiss><?= e(t('admin.editor.notice_image_uploaded')) ?></p>
                 <?php endif; ?>
                 <?php if (!empty($_GET['upload_error'])): ?>
-                    <p class="notice" data-auto-dismiss><?= e($_GET['upload_error']) ?></p>
+                    <p class="notice delete" data-auto-dismiss><?= e($_GET['upload_error']) ?></p>
                 <?php endif; ?>
                 <form method="post" class="editor-form" id="page-form">
                     <input type="hidden" name="original_slug" value="<?= e($originalSlug) ?>">
@@ -240,6 +259,7 @@ require __DIR__ . '/../includes/admin-head.php';
             formId: 'page-form',
             csrfToken: '<?= e(csrf_token()) ?>',
             basePath: '<?= e(base_path()) ?>',
+            autosave: <?= $autosaveData !== null ? json_encode($autosaveData, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT) : 'null' ?>,
         };
     </script>
     <script src="<?= base_path() ?>/admin/js/editor.js?v=<?= e((string) @filemtime(__DIR__ . '/js/editor.js')) ?>"></script>

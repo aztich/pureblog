@@ -117,6 +117,21 @@
     if (autosaveStatus) autosaveStatus.textContent = text;
   }
 
+  async function discardAutosave() {
+    const slugValue = (slugField?.value ?? '').trim();
+    if (slugValue === '') return;
+    const formData = new FormData();
+    formData.set('csrf_token', config.csrfToken);
+    formData.set('action', 'discard');
+    formData.set('slug', slugValue);
+    formData.set('editor_type', config.editorType || 'post');
+    await fetch((config.basePath || '') + '/admin/autosave.php', {
+      method: 'POST',
+      body: formData,
+      credentials: 'same-origin',
+    }).catch(() => {});
+  }
+
   async function doAutosave() {
     const slugValue = (slugField?.value ?? '').trim();
     if (slugValue === '') return;
@@ -126,6 +141,7 @@
       cm.save();
       const formData = new FormData(editorForm);
       formData.set('editor_type', config.editorType || 'post');
+      formData.set('action', 'save');
       const response = await fetch((config.basePath || '') + '/admin/autosave.php', {
         method: 'POST',
         body: formData,
@@ -152,6 +168,66 @@
   [titleField, slugField, descriptionField, dateField, tagsField].forEach((field) => {
     field?.addEventListener('input', scheduleAutosave);
   });
+
+  // Discard autosave on successful manual save (form submit).
+  editorForm?.addEventListener('submit', () => { discardAutosave(); });
+
+  // Show restore banner if an autosave exists.
+  if (config.autosave) {
+    const saved = config.autosave;
+    const time  = new Date(saved.timestamp * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    const preview = document.createElement('div');
+    preview.className = 'autosave-preview';
+    preview.hidden = true;
+    preview.innerHTML =
+      (saved.title   ? '<p><strong>Title:</strong> ' + saved.title.replace(/</g, '&lt;') + '</p>' : '') +
+      (saved.content ? '<pre class="autosave-preview-content">' + saved.content.replace(/</g, '&lt;') + '</pre>' : '');
+
+    const banner = document.createElement('div');
+    banner.className = 'notice autosave-restore-notice';
+    banner.innerHTML =
+      'Autosaved changes from ' + time + ' exist. ' +
+      '<button type="button" class="autosave-btn" id="autosave-view-btn">View</button> ' +
+      '<button type="button" class="autosave-btn" id="autosave-restore-btn">Restore</button> ' +
+      '<button type="button" class="autosave-btn delete" id="autosave-discard-btn">Discard</button>';
+
+    const main = document.querySelector('main');
+    if (main) {
+      main.insertBefore(preview, main.firstChild);
+      main.insertBefore(banner, preview);
+    }
+
+    document.getElementById('autosave-view-btn')?.addEventListener('click', () => {
+      const isHidden = preview.hidden;
+      preview.hidden = !isHidden;
+      document.getElementById('autosave-view-btn').textContent = isHidden ? 'Hide' : 'View';
+    });
+
+    document.getElementById('autosave-restore-btn')?.addEventListener('click', () => {
+      const titleField2 = editorForm?.querySelector('[name="title"]');
+      const descField2  = editorForm?.querySelector('[name="description"]');
+      const tagsField2  = editorForm?.querySelector('[name="tags"]');
+      const dateField2  = editorForm?.querySelector('[name="date"]');
+      const navField2   = editorForm?.querySelector('[name="include_in_nav"]');
+      const statusField = editorForm?.querySelector('[name="status"]');
+
+      if (titleField2  && saved.title       != null) titleField2.value  = saved.title;
+      if (descField2   && saved.description != null) descField2.value   = saved.description;
+      if (tagsField2   && saved.tags        != null) tagsField2.value   = saved.tags;
+      if (dateField2   && saved.date        != null) dateField2.value   = saved.date;
+      if (navField2    && saved.include_in_nav != null) navField2.value = saved.include_in_nav;
+      if (statusField  && saved.status      != null) statusField.value  = saved.status;
+      if (saved.content != null) { cm.setValue(saved.content); cm.save(); }
+
+      banner.remove();
+    });
+
+    document.getElementById('autosave-discard-btn')?.addEventListener('click', async () => {
+      await discardAutosave();
+      banner.remove();
+    });
+  }
 
   const getScrollKey = () => {
     const slugValue = (slugField?.value ?? '').trim();

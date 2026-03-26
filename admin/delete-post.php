@@ -42,7 +42,7 @@ require __DIR__ . '/../includes/admin-head.php';
 
 
         <?php if ($errors): ?>
-            <div class="notice">
+            <div class="notice delete">
                 <ul>
                     <?php foreach ($errors as $error): ?>
                         <li><?= e($error) ?></li>

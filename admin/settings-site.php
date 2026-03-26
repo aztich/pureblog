@@ -38,6 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['admin_action_id'])) 
     $baseUrl = trim($_POST['base_url'] ?? '');
     $homepageSlug = trim($_POST['homepage_slug'] ?? '');
     $blogPageSlug = trim($_POST['blog_page_slug'] ?? '');
+    $searchPageSlug = trim($_POST['search_page_slug'] ?? '');
     $ogImagePreferred = trim($_POST['og_image_preferred'] ?? 'banner');
     $cacheEnabled = !empty($_POST['cache_enabled']);
     $rssttl = max(0, (int) ($_POST['rss_ttl'] ?? 3600));
@@ -63,6 +64,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['admin_action_id'])) 
     if ($blogPageSlug !== '' && $blogPageSlug !== $hiddenBlogValue && !isset($pageSlugLookup[$blogPageSlug])) {
         $errors[] = t('admin.settings.site.error_blog_page');
     }
+    if ($searchPageSlug !== '' && !isset($pageSlugLookup[$searchPageSlug])) {
+        $errors[] = t('admin.settings.site.error_search_page');
+    }
     if (!in_array($ogImagePreferred, ['banner', 'square'], true)) {
         $errors[] = t('admin.settings.site.error_og_format');
     }
@@ -86,6 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['admin_action_id'])) 
         $config['base_url'] = $baseUrl;
         $config['homepage_slug'] = $homepageSlug;
         $config['blog_page_slug'] = $blogPageSlug;
+        $config['search_page_slug'] = $searchPageSlug;
         $config['cache']['enabled'] = $cacheEnabled;
         $config['cache']['rss_ttl'] = $rssttl;
 
@@ -194,6 +199,16 @@ require __DIR__ . '/../includes/admin-head.php';
                     <option value="<?= e($hiddenBlogValue) ?>"<?= ($config['blog_page_slug'] ?? '') === $hiddenBlogValue ? ' selected' : '' ?>><?= e(t('admin.settings.site.blog_hidden')) ?></option>
                     <?php foreach ($pageOptions as $pageOption): ?>
                         <option value="<?= e($pageOption['slug']) ?>"<?= ($config['blog_page_slug'] ?? '') === $pageOption['slug'] ? ' selected' : '' ?>>
+                            <?= e($pageOption['title']) ?> (<?= e($pageOption['slug']) ?>)
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+
+                <label for="search_page_slug"><?= e(t('admin.settings.site.search_page')) ?></label>
+                <select id="search_page_slug" name="search_page_slug">
+                    <option value=""><?= e(t('admin.settings.site.search_page_none')) ?></option>
+                    <?php foreach ($pageOptions as $pageOption): ?>
+                        <option value="<?= e($pageOption['slug']) ?>"<?= ($config['search_page_slug'] ?? 'search') === $pageOption['slug'] ? ' selected' : '' ?>>
                             <?= e($pageOption['title']) ?> (<?= e($pageOption['slug']) ?>)
                         </option>
                     <?php endforeach; ?>

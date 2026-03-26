@@ -65,6 +65,7 @@ function default_config(): array
         'search_excerpt_length' => 2500,
         'homepage_slug' => '',
         'blog_page_slug' => '',
+        'search_page_slug' => 'search',
 
         'base_url' => '',
         'language' => 'en',

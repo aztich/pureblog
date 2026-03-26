@@ -30,11 +30,12 @@ if ($slug === '') {
         'image/png' => 'png',
         'image/gif' => 'gif',
         'image/webp' => 'webp',
+        'image/avif' => 'avif',
     ];
     $finfo = new finfo(FILEINFO_MIME_TYPE);
     $mimeType = $finfo->file($_FILES['image']['tmp_name']) ?: '';
     if (!isset($allowedTypes[$mimeType])) {
-        $error = 'Unsupported image type. Use JPG, PNG, GIF, or WebP.';
+        $error = 'Unsupported image type. Use JPG, PNG, GIF, WebP, or AVIF.';
     }
 }
 

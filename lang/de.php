@@ -1,8 +1,11 @@
 <?php
 
+
 return [
 
+
     'name' => 'Deutsch',
+
 
     // -------------------------------------------------------------------------
     // Date localisation
@@ -26,6 +29,7 @@ return [
         ],
     ],
 
+
     // -------------------------------------------------------------------------
     // Frontend (public-facing)
     // -------------------------------------------------------------------------
@@ -38,28 +42,38 @@ return [
         'next_post'             => 'Nächster Beitrag ➡',
         'post_not_found'        => 'Beitrag nicht gefunden',
         'post_not_found_detail' => 'Der angeforderte Beitrag konnte nicht gefunden werden.',
+        'search_label'          => 'Beiträge suchen',
+        'search_placeholder'    => 'Nach einem Beitrag suchen …',
+        'search_button'         => 'Suchen',
+        'search_empty'          => 'Gib einen Suchbegriff ein, um Beiträge zu finden.',
+        'no_posts_found'        => 'Keine Beiträge für „{search}" gefunden.',
+        'search_result'         => '{n} Ergebnis gefunden.',
+        'search_results'        => '{n} Ergebnisse gefunden.',
     ],
+
 
     // -------------------------------------------------------------------------
     // Admin
     // -------------------------------------------------------------------------
     'admin' => [
 
+
         'nav' => [
             'dashboard'     => 'Dashboard',
             'pages'         => 'Seiten',
             'settings'      => 'Einstellungen',
-            'view_site'     => 'Website ansehen',
+            'view_site'     => 'Blog ansehen',
             'clear_cache'   => 'Cache leeren',
             'log_out'       => 'Abmelden',
             'cache_cleared' => 'Cache geleert.',
             'invalid_action'=> 'Ungültige Admin-Aktion.',
         ],
 
+
         'login' => [
             'page_title'     => 'Admin-Login – Pure Blog',
             'heading'        => 'Admin-Login',
-            'setup_complete' => 'Einrichtung abgeschlossen. Anmelden um fortzufahren.',
+            'setup_complete' => 'Einrichtung abgeschlossen. Anmelden, um fortzufahren.',
             'username'       => 'Benutzername',
             'password'       => 'Passwort',
             'submit'         => 'Anmelden',
@@ -68,11 +82,12 @@ return [
             'error_lockout_5'=> 'Zu viele ungültige Versuche. Versuch es in 5 Minuten erneut.',
         ],
 
+
         'dashboard' => [
             'page_title'           => 'Dashboard – Pure Blog',
             'stat_published'       => 'Veröffentlichte Beiträge',
             'stat_this_year'       => 'Beiträge in {year}',
-            'stat_last_published'  => 'Letzter veröffentlichter Beitrag',
+            'stat_last_published'  => 'Jüngster Beitrag',
             'stat_top_tags'        => 'Top-Tags',
             'stat_no_tags'         => 'Noch keine Tags',
             'time_just_now'        => 'Gerade eben',
@@ -88,13 +103,14 @@ return [
             'cancel'               => 'Abbrechen',
             'search_label'         => 'Beiträge suchen',
             'search_placeholder'   => 'Nach einem Beitrag suchen …',
-            'no_posts_found'       => 'Keine Beiträge für „{search}“ gefunden.',
+            'no_posts_found'       => 'Keine Beiträge für „{search}” gefunden.',
             'no_posts'             => 'Noch keine Beiträge – fang an zu schreiben!',
             'notice_saved'         => 'Beitrag gespeichert.',
             'notice_deleted'       => 'Beitrag gelöscht.',
             'pagination_newer'     => '← Neuere Beiträge',
             'pagination_older'     => 'Ältere Beiträge →',
         ],
+
 
         'editor' => [
             'title_label'           => 'Titel',
@@ -124,6 +140,7 @@ return [
             'tip_markdown'          => 'Markdown',
         ],
 
+
         'post_editor' => [
             'page_title'          => 'Beitragseditor',
             'settings_title'      => 'Beitragseinstellungen',
@@ -136,6 +153,7 @@ return [
             'edit_title'          => 'Beitrag bearbeiten – Pure Blog',
             'new_title'           => 'Neuer Beitrag – Pure Blog',
         ],
+
 
         'page_editor' => [
             'page_title'          => 'Seiteneditor',
@@ -152,6 +170,7 @@ return [
             'new_title'           => 'Neue Seite – Pure Blog',
         ],
 
+
         'delete_post' => [
             'page_title'     => 'Beitrag löschen – Pure Blog',
             'heading'        => 'Beitrag löschen',
@@ -162,6 +181,7 @@ return [
             'error_not_found'=> 'Beitrag nicht gefunden.',
             'error_delete'   => 'Konnte Beitrag nicht löschen.',
         ],
+
 
         'delete_page' => [
             'page_title'     => 'Seite löschen – Pure Blog',
@@ -174,6 +194,7 @@ return [
             'error_delete'   => 'Konnte Seite nicht löschen.',
         ],
 
+
         'pages' => [
             'page_title'     => 'Seiten – Pure Blog',
             'heading'        => 'Seiten',
@@ -183,10 +204,12 @@ return [
             'notice_deleted' => 'Seite gelöscht.',
         ],
 
+
         'settings' => [
 
+
             'nav' => [
-                'site'    => 'Website',
+                'site'    => 'Blog',
                 'theme'   => 'Theme',
                 'css'     => 'CSS',
                 'user'    => 'Benutzer',
@@ -194,14 +217,15 @@ return [
                 'save'    => 'Einstellungen speichern',
             ],
 
+
             'site' => [
-                'page_title'         => 'Website-Einstellungen – Pure Blog',
-                'heading'            => 'Website-Einstellungen',
-                'section_title'      => 'Website-Einstellungen',
-                'site_title'         => 'Website-Titel',
-                'tagline'            => 'Website-Slogan (optional)',
-                'description'        => 'Website-Beschreibung',
-                'email'              => 'Website-E-Mail (optional)',
+                'page_title'         => 'Blog-Einstellungen – Pure Blog',
+                'heading'            => 'Blog-Einstellungen',
+                'section_title'      => 'Blog-Einstellungen',
+                'site_title'         => 'Blog-Titel',
+                'tagline'            => 'Blog-Slogan (optional)',
+                'description'        => 'Blog-Beschreibung',
+                'email'              => 'Blog-E-Mail (optional)',
                 'posts_per_page'            => 'Beiträge pro Seite',
                 'search_excerpt_length'     => 'Länge des Suchauszugs',
                 'search_excerpt_length_tip' => 'Anzahl der pro Beitrag indizierten Zeichen für die Suche. Größere Werte verbessern die Suchgenauigkeit, erhöhen aber den Speicherbedarf. Auf 0 setzen, um den vollständigen Beitragsinhalt zu indizieren.',
@@ -228,12 +252,15 @@ return [
                 'footer_injects'     => 'Footer-Injektionen',
                 'notice_updated'     => 'Einstellungen aktualisiert.',
                 'error_save'         => 'Speichern der Einstellungen fehlgeschlagen.',
-                'error_title'        => 'Website-Titel ist erforderlich.',
+                'error_title'        => 'Blog-Titel ist erforderlich.',
                 'error_posts_per_page'=> 'Beiträge pro Seite muss zwischen 1 und 100 liegen.',
                 'error_timezone'     => 'Zeitzone muss ein gültiger PHP-Zeitzonenbezeichner sein (z. B. UTC, Europe/Berlin).',
                 'error_date_format'  => 'Datumsformat ist erforderlich.',
                 'error_homepage'     => 'Startseite muss auf eine vorhandene Seite verweisen.',
                 'error_blog_page'    => 'Blog-Seite muss auf eine vorhandene Seite verweisen.',
+                'search_page'        => 'Suchseite',
+                'search_page_none'   => 'Keine (deaktiviert)',
+                'error_search_page'  => 'Die Suchseite muss auf eine vorhandene Seite verweisen.',
                 'error_og_format'        => 'Das Open-Graph-Bildformat muss „Banner“ oder „Quadratisch“ sein.',
                 'current'                => 'Aktuell',
                 'tip_language_link'      => 'Sprachcode',
@@ -245,6 +272,7 @@ return [
                 'tip_optional'           => 'optional',
                 'tip_rss_ttl'            => 'Sekunden, 0 zum Deaktivieren',
             ],
+
 
             'user' => [
                 'page_title'           => 'Benutzereinstellungen – Pure Blog',
@@ -262,18 +290,62 @@ return [
                 'error_password_wrong' => 'Aktuelles Passwort ist falsch.',
             ],
 
+
             'theme' => [
-                'page_title'        => 'Theme-Einstellungen – Pure Blog',
-                'heading'           => 'Theme- & Layout-Einstellungen',
-                'notice_updated'    => 'Einstellungen aktualisiert.',
-                'notice_reset'      => 'Theme-Farben auf Standardwerte zurückgesetzt.',
-                'error_save'        => 'Einstellungen konnten nicht gespeichert werden.',
-                'error_font'        => 'Schriftart muss „sans“, „serif“ oder „mono“ sein.',
-                'error_admin_font'  => 'Admin-Schriftart muss „sans“, „serif“ oder „mono“ sein.',
-                'error_admin_color' => 'Admin-Farbmodus muss „light“, „dark“ oder „auto“ sein.',
-                'error_color_mode'  => 'Farbmodus muss „light“, „dark“ oder „auto“ sein.',
-                'error_post_layout' => 'Beitragslisten-Layout muss „excerpt“, „full“ oder „archive“ sein.',
+                'page_title'          => 'Theme-Einstellungen – Pure Blog',
+                'heading'             => 'Theme- & Layout-Einstellungen',
+                'notice_updated'      => 'Einstellungen aktualisiert.',
+                'notice_reset'        => 'Theme-Farben auf Standardwerte zurückgesetzt.',
+                'error_save'          => 'Einstellungen konnten nicht gespeichert werden.',
+                'error_font'          => 'Schriftart muss „sans”, „serif” oder „mono” sein.',
+                'error_admin_font'    => 'Admin-Schriftart muss „sans”, „serif” oder „mono” sein.',
+                'error_admin_color'   => 'Admin-Farbmodus muss „light”, „dark” oder „auto” sein.',
+                'error_color_mode'    => 'Farbmodus muss „light”, „dark” oder „auto” sein.',
+                'error_post_layout'   => 'Beitragslisten-Layout muss „excerpt”, „full” oder „archive” sein.',
+                'section_fonts'       => 'Schriftart-Einstellungen',
+                'site_font'           => 'Blog-Schriftart',
+                'admin_font'          => 'Admin-Schriftart',
+                'section_color_mode'  => 'Design',
+                'site_color_mode'     => 'Blog-Design',
+                'admin_color_mode'    => 'Admin-Design',
+                'color_light'         => 'Hell',
+                'color_dark'          => 'Dunkel',
+                'color_auto'          => 'Auto',
+                'section_colors'      => 'Eigene Farbauswahl',
+                'gallery_promo'       => 'Lass dich in der {link} von Pure Blog inspirieren.',
+                'gallery_link'        => 'Themen-Galerie',
+                'light_mode'          => 'Helles Design',
+                'dark_mode'           => 'Dunkles Design',
+                'color_background'    => 'Hintergrundfarbe',
+                'color_text'          => 'Textfarbe',
+                'color_accent'        => 'Akzentfarbe',
+                'color_border'        => 'Rahmenfarbe',
+                'color_accent_bg'     => 'Akzenthintergrund',
+                'reset_light'         => 'Helle Farben zurücksetzen',
+                'reset_light_confirm' => 'Helle Farben auf Standardwerte zurücksetzen?',
+                'reset_dark'          => 'Dunkle Farben zurücksetzen',
+                'reset_dark_confirm'  => 'Dunkle Farben auf Standardwerte zurücksetzen?',
+                'section_post_layout' => 'Ansicht Beitragsliste',
+                'layout_excerpt'      => 'Beitragsauszug',
+                'layout_full'         => 'Ganzer Beitrag',
+                'layout_archive'      => 'Datum & Titel',
             ],
+
+
+            'css' => [
+                'page_title'        => 'Benutzerdefiniertes CSS – Pure Blog',
+                'heading'           => 'CSS-Einstellungen',
+                'notice_saved'      => 'CSS gespeichert.',
+                'error_save_front'  => 'Konnte Frontend-CSS nicht speichern.',
+                'error_save_admin'  => 'Konnte Admin-CSS nicht speichern.',
+                'error_dir_front'   => 'Konnte Frontend-CSS-Verzeichnis nicht erstellen.',
+                'error_dir_admin'   => 'Konnte Admin-CSS-Verzeichnis nicht erstellen.',
+                'section_front'     => 'CSS der Blogansicht',
+                'section_admin'     => 'CSS der Adminansicht',
+                'placeholder_front' => 'Gestalte dein Blog mit eigenem CSS …',
+                'placeholder_admin' => 'Eigenes CSS für die Admin-Oberfläche hinzufügen …',
+            ],
+
 
             'updates' => [
                 'page_title'            => 'Updates – Pure Blog',
@@ -316,31 +388,35 @@ return [
                 'update_failed'         => 'Update fehlgeschlagen.',
             ],
 
+
         ],
 
+
     ],
+
 
     // -------------------------------------------------------------------------
     // Setup wizard
     // -------------------------------------------------------------------------
     'setup' => [
         'page_title'       => 'Einrichtung – Pure Blog',
-        'heading'          => 'Deine neue Website einrichten',
-        'site_title'       => 'Website-Titel',
-        'tagline'          => 'Website-Slogan (optional)',
+        'heading'          => 'Dein neues Blog einrichten',
+        'site_title'       => 'Blog-Titel',
+        'tagline'          => 'Blog-Slogan (optional)',
         'language'         => 'Sprache',
-        'base_url'         => 'Website-URL',
+        'base_url'         => 'Blog-URL',
         'username'         => 'Admin-Benutzername',
         'password'         => 'Admin-Passwort',
         'confirm_password' => 'Passwort bestätigen',
-        'submit'           => 'Website erstellen',
-        'error_title'      => 'Website-Titel ist erforderlich.',
+        'submit'           => 'Blog erstellen',
+        'error_title'      => 'Blog-Titel ist erforderlich.',
         'error_username'   => 'Admin-Benutzername ist erforderlich.',
         'error_password'   => 'Passwort und Bestätigung sind erforderlich.',
         'error_mismatch'   => 'Passwörter stimmen nicht überein.',
-        'error_config_dir' => 'Konnte Konfigurationsverzeichnis nicht erstellen. Überprüf die Berechtigungen.',
-        'error_config_write'  => 'Konnte Konfigurationsdatei nicht schreiben. Überprüf die Berechtigungen.',
+        'error_config_dir' => 'Konnte Konfigurationsverzeichnis nicht erstellen. Überprüfe die Berechtigungen.',
+        'error_config_write'  => 'Konnte Konfigurationsdatei nicht schreiben. Überprüfe die Berechtigungen.',
         'tip_language_link'   => 'Sprachcode',
     ],
+
 
 ];

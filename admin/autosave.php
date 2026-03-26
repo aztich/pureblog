@@ -23,59 +23,53 @@ if ($token === '' || !is_string($sessionToken) || !hash_equals($sessionToken, $t
     exit;
 }
 
-$config = load_config();
 $editorType = trim($_POST['editor_type'] ?? 'post');
-$error = '';
+$slug       = trim($_POST['slug'] ?? '');
+$action     = trim($_POST['action'] ?? 'save');
 
-if ($editorType === 'page') {
-    $page = [
-        'title'          => trim($_POST['title'] ?? ''),
-        'slug'           => trim($_POST['slug'] ?? ''),
-        'status'         => trim($_POST['status'] ?? 'draft'),
-        'description'    => trim($_POST['description'] ?? ''),
-        'include_in_nav' => (($_POST['include_in_nav'] ?? 'yes') === 'yes' || ($_POST['include_in_nav'] ?? '') === '1'),
-        'content'        => trim($_POST['content'] ?? ''),
-    ];
-
-    if ($page['title'] === '' || $page['slug'] === '') {
-        echo json_encode(['success' => false, 'error' => 'Title and slug required']);
-        exit;
-    }
-
-    $originalSlug   = trim($_POST['original_slug'] ?? '') ?: null;
-    $originalStatus = trim($_POST['original_status'] ?? '') ?: null;
-    $saved = save_page($page, $originalSlug, $originalStatus, $error);
-} else {
-    $post = [
-        'title'       => trim($_POST['title'] ?? ''),
-        'slug'        => trim($_POST['slug'] ?? ''),
-        'date'        => trim($_POST['date'] ?? ''),
-        'status'      => trim($_POST['status'] ?? 'draft'),
-        'tags'        => [],
-        'description' => trim($_POST['description'] ?? ''),
-        'content'     => trim($_POST['content'] ?? ''),
-        'layout'      => trim($_POST['post_layout'] ?? ''),
-    ];
-
-    $tagsInput    = trim($_POST['tags'] ?? '');
-    $post['tags'] = $tagsInput === '' ? [] : array_values(array_filter(array_map('trim', explode(',', $tagsInput))));
-
-    $post['layout_fields'] = [];
-    foreach ($_POST as $key => $value) {
-        if (str_starts_with($key, 'layout_field__')) {
-            $post['layout_fields'][substr($key, strlen('layout_field__'))] = trim((string) $value);
-        }
-    }
-
-    if ($post['title'] === '' || $post['slug'] === '') {
-        echo json_encode(['success' => false, 'error' => 'Title and slug required']);
-        exit;
-    }
-
-    $originalSlug   = trim($_POST['original_slug'] ?? '') ?: null;
-    $originalDate   = trim($_POST['original_date'] ?? '') ?: null;
-    $originalStatus = trim($_POST['original_status'] ?? '') ?: null;
-    $saved = save_post($post, $originalSlug, $originalDate, $originalStatus, $error);
+if ($slug === '') {
+    echo json_encode(['success' => false, 'error' => 'Slug required']);
+    exit;
 }
 
-echo json_encode($saved ? ['success' => true] : ['success' => false, 'error' => $error]);
+$autosaveDir  = PUREBLOG_BASE_PATH . '/content/autosaves';
+$autosaveFile = $autosaveDir . '/' . $editorType . '-' . $slug . '.json';
+
+if ($action === 'discard') {
+    if (is_file($autosaveFile)) {
+        @unlink($autosaveFile);
+    }
+    echo json_encode(['success' => true]);
+    exit;
+}
+
+// Ensure the autosaves directory exists and is protected.
+if (!is_dir($autosaveDir)) {
+    mkdir($autosaveDir, 0755, true);
+    file_put_contents($autosaveDir . '/.htaccess', "Deny from all\n");
+}
+
+if ($editorType === 'page') {
+    $data = [
+        'timestamp'      => time(),
+        'title'          => trim($_POST['title'] ?? ''),
+        'content'        => trim($_POST['content'] ?? ''),
+        'description'    => trim($_POST['description'] ?? ''),
+        'status'         => trim($_POST['status'] ?? 'draft'),
+        'include_in_nav' => trim($_POST['include_in_nav'] ?? 'yes'),
+    ];
+} else {
+    $data = [
+        'timestamp'   => time(),
+        'title'       => trim($_POST['title'] ?? ''),
+        'content'     => trim($_POST['content'] ?? ''),
+        'description' => trim($_POST['description'] ?? ''),
+        'status'      => trim($_POST['status'] ?? 'draft'),
+        'tags'        => trim($_POST['tags'] ?? ''),
+        'date'        => trim($_POST['date'] ?? ''),
+        'layout'      => trim($_POST['post_layout'] ?? ''),
+    ];
+}
+
+$written = file_put_contents($autosaveFile, json_encode($data, JSON_UNESCAPED_UNICODE));
+echo json_encode($written !== false ? ['success' => true] : ['success' => false, 'error' => 'Failed to write autosave']);

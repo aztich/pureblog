@@ -1004,7 +1004,7 @@ require __DIR__ . '/../includes/admin-head.php';
             </p>
 
             <?php if ($latest !== null && !($latest['ok'] ?? false)): ?>
-                <p class="notice"><?= e($latest['error'] ?? t('admin.settings.updates.error_check')) ?></p>
+                <p class="notice delete"><?= e($latest['error'] ?? t('admin.settings.updates.error_check')) ?></p>
             <?php endif; ?>
 
             <?php if ($latest !== null && ($latest['ok'] ?? false)): ?>
@@ -1019,7 +1019,7 @@ require __DIR__ . '/../includes/admin-head.php';
         <?php if ($packagePlanError !== ''): ?>
         <section class="section-divider">
             <span class="title"><?= e(t('admin.settings.updates.section_inspect')) ?></span>
-            <p class="notice"><?= e($packagePlanError) ?></p>
+            <p class="notice delete"><?= e($packagePlanError) ?></p>
         </section>
         <?php endif; ?>
 
@@ -1104,7 +1104,7 @@ require __DIR__ . '/../includes/admin-head.php';
         <section class="section-divider">
             <span class="title"><?= e(t('admin.settings.updates.section_result')) ?></span>
             <?php if (!($applyResult['ok'] ?? false)): ?>
-                <p class="notice"><?= e((string) ($applyResult['error'] ?? t('admin.settings.updates.update_failed'))) ?></p>
+                <p class="notice delete"><?= e((string) ($applyResult['error'] ?? t('admin.settings.updates.update_failed'))) ?></p>
             <?php else: ?>
                 <p><?= e((string) ($applyResult['message'] ?? t('admin.settings.updates.update_completed'))) ?></p>
                 <?php if (!empty($applyResult['backup_path'])): ?>

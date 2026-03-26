@@ -192,7 +192,7 @@ require __DIR__ . '/../includes/admin-head.php';
                         </a>
                         <div class="admin-list-meta">
                             <span><svg class="icon" aria-hidden="true"><use href="#icon-calendar"></use></svg> <?= e(format_datetime_for_display((string) ($post['date'] ?? ''), $config, 'Y-m-d @ H:i')) ?></span>
-                            <span class="status <?= e($post['status']) ?>"><svg class="icon" aria-hidden="true"><use href="#icon-toggle-right"></use></svg> <?= e($post['status']) ?></span>
+                            <span class="status <?= e($post['status']) ?>"><svg class="icon" aria-hidden="true"><use href="#icon-toggle-right"></use></svg> <?= e(t('admin.editor.status_' . $post['status'])) ?></span>
                         </div>
                     </li>
                 <?php endforeach; ?>

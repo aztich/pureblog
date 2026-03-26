@@ -70,7 +70,6 @@ $reservedPaths = [
     'post.php',
     'setup.php',
     'page.php',
-    'search.php',
 ];
 $isSingle = !$isTag && $requestPath !== ''
     && !str_contains($requestPath, '.')

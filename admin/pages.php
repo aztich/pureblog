@@ -47,7 +47,7 @@ require __DIR__ . '/../includes/admin-head.php';
                             <?= e($page['title']) ?>
                         </a>
                         <div class="admin-list-meta">
-                            <span class="status <?= e($page['status']) ?>"><svg class="icon" aria-hidden="true"><use href="#icon-toggle-right"></use></svg> <?= e($page['status']) ?></span>
+                            <span class="status <?= e($page['status']) ?>"><svg class="icon" aria-hidden="true"><use href="#icon-toggle-right"></use></svg> <?= e(t('admin.editor.status_' . $page['status'])) ?></span>
                         </div>
                     </li>
                 <?php endforeach; ?>
