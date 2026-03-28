@@ -215,10 +215,10 @@ require __DIR__ . '/../includes/admin-head.php';
                     </nav>
 
                     <label for="title"><?= e(t('admin.editor.title_label')) ?></label>
-                    <input type="text" id="title" name="title" value="<?= e($post['title']) ?>" required>
+                    <input type="text" id="title" name="title" value="<?= e($post['title']) ?>" required autocomplete="off">
 
                     <label for="content"><?= e(t('admin.editor.content_label')) ?> <span class="tip">(<a target="_blank" rel="noopener noreferrer" href="https://pureblog.org/markdown-helper"><?= e(t('admin.editor.tip_markdown')) ?></a>)</span></label>
-                    <textarea id="content" name="content" rows="18"><?= e($post['content']) ?></textarea>
+                    <textarea id="content" name="content" rows="18" autocomplete="off"><?= e($post['content']) ?></textarea>
 
                     <?php if ($layoutFields): ?>
                         <?php foreach ($layoutFields as $field):
@@ -234,7 +234,7 @@ require __DIR__ . '/../includes/admin-head.php';
                             <label for="<?= e($fieldId) ?>"><?= e($fieldLabel) ?></label>
                             <?php endif; ?>
                             <?php if ($fieldType === 'markdown'): ?>
-                                <textarea id="<?= e($fieldId) ?>" name="<?= e($inputName) ?>" rows="8" data-layout-markdown><?= e($fieldValue) ?></textarea>
+                                <textarea id="<?= e($fieldId) ?>" name="<?= e($inputName) ?>" rows="8" data-layout-markdown autocomplete="off"><?= e($fieldValue) ?></textarea>
                             <?php elseif ($fieldType === 'select'): ?>
                                 <?php $fieldOptions = is_array($field['options'] ?? null) ? $field['options'] : []; ?>
                                 <select id="<?= e($fieldId) ?>" name="<?= e($inputName) ?>">
@@ -252,7 +252,7 @@ require __DIR__ . '/../includes/admin-head.php';
                                     <?= e($fieldLabel) ?>
                                 </label>
                             <?php else: ?>
-                                <input type="text" id="<?= e($fieldId) ?>" name="<?= e($inputName) ?>" value="<?= e($fieldValue) ?>">
+                                <input type="text" id="<?= e($fieldId) ?>" name="<?= e($inputName) ?>" value="<?= e($fieldValue) ?>" autocomplete="off">
                             <?php endif; ?>
                         <?php endforeach; ?>
                     <?php endif; ?>
@@ -270,13 +270,13 @@ require __DIR__ . '/../includes/admin-head.php';
                     <div class="section-divider">
                         <span class="title"><?= e(t('admin.post_editor.settings_title')) ?></span>
                         <label for="slug"><?= e(t('admin.editor.slug_label')) ?></label>
-                        <input type="text" id="slug" name="slug" form="editor-form" value="<?= e($post['slug']) ?>">
+                        <input type="text" id="slug" name="slug" form="editor-form" value="<?= e($post['slug']) ?>" autocomplete="off">
                         
                         <label for="description"><?= e(t('admin.editor.description_label')) ?></label>
-                        <input type="text" id="description" name="description" form="editor-form" value="<?= e($post['description']) ?>">
+                        <input type="text" id="description" name="description" form="editor-form" value="<?= e($post['description']) ?>" autocomplete="off">
 
                         <label for="date"><?= e(t('admin.editor.date_label')) ?></label>
-                        <input type="text" id="date" name="date" form="editor-form" value="<?= e($post['date']) ?>">
+                        <input type="text" id="date" name="date" form="editor-form" value="<?= e($post['date']) ?>" autocomplete="off">
 
                         <label for="status"><?= e(t('admin.editor.status_label')) ?></label>
                         <select id="status" name="status" form="editor-form">

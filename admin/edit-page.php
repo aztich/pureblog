@@ -178,10 +178,10 @@ require __DIR__ . '/../includes/admin-head.php';
                     </nav>
 
                     <label for="title"><?= e(t('admin.editor.title_label')) ?></label>
-                    <input type="text" id="title" name="title" value="<?= e($page['title']) ?>" required>
+                    <input type="text" id="title" name="title" value="<?= e($page['title']) ?>" required autocomplete="off">
 
                     <label for="content"><?= e(t('admin.editor.content_label')) ?> <span class="tip">(<a target="_blank" rel="noopener noreferrer" href="https://pureblog.org/markdown-helper"><?= e(t('admin.editor.tip_markdown')) ?></a>)</span></label>
-                    <textarea id="content" name="content" rows="18"><?= e($page['content']) ?></textarea>
+                    <textarea id="content" name="content" rows="18" autocomplete="off"><?= e($page['content']) ?></textarea>
                 </form>
                 <?php if ($isEditing && $page['slug'] !== ''): ?>
                     <form method="post" action="<?= base_path() ?>/admin/delete-page.php" id="delete-page-form">
@@ -195,10 +195,10 @@ require __DIR__ . '/../includes/admin-head.php';
                     <div class="section-divider">
                         <span class="title"><?= e(t('admin.page_editor.settings_title')) ?></span>
                         <label for="slug"><?= e(t('admin.editor.slug_label')) ?></label>
-                        <input type="text" id="slug" name="slug" form="page-form" value="<?= e($page['slug']) ?>">
+                        <input type="text" id="slug" name="slug" form="page-form" value="<?= e($page['slug']) ?>" autocomplete="off">
 
                         <label for="description"><?= e(t('admin.editor.description_label')) ?></label>
-                        <input type="text" id="description" name="description" form="page-form" value="<?= e($page['description']) ?>">
+                        <input type="text" id="description" name="description" form="page-form" value="<?= e($page['description']) ?>" autocomplete="off">
 
                         <label for="status"><?= e(t('admin.editor.status_label')) ?></label>
                         <select id="status" name="status" form="page-form">
