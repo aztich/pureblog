@@ -47,23 +47,14 @@ $adminTitle = t('admin.content.page_title');
 require __DIR__ . '/../includes/admin-head.php';
 ?>
     <main class="mid">
-        <nav class="content-tabs" aria-label="<?= e(t('admin.content.tabs_label')) ?>">
-            <a href="<?= base_path() ?>/admin/content.php?tab=posts"<?= $tab === 'posts' ? ' class="current" aria-current="page"' : '' ?>><?= e(t('admin.content.tab_posts')) ?></a>
-            <a href="<?= base_path() ?>/admin/content.php?tab=pages"<?= $tab === 'pages' ? ' class="current" aria-current="page"' : '' ?>><?= e(t('admin.content.tab_pages')) ?></a>
-        </nav>
-
-        <?php if ($tab === 'posts'): ?>
-
-            <?php if (!empty($_GET['saved'])): ?>
-                <p class="notice" data-auto-dismiss><?= e(t('admin.content.notice_post_saved')) ?></p>
-            <?php endif; ?>
-            <?php if (!empty($_GET['deleted'])): ?>
-                <p class="notice" data-auto-dismiss><?= e(t('admin.content.notice_post_deleted')) ?></p>
-            <?php endif; ?>
-
-            <nav class="editor-actions">
+        <div class="content-toolbar">
+            <nav class="content-tabs" aria-label="<?= e(t('admin.content.tabs_label')) ?>">
+                <a href="<?= base_path() ?>/admin/content.php?tab=posts"<?= $tab === 'posts' ? ' class="current" aria-current="page"' : '' ?>><svg class="icon" aria-hidden="true"><use href="#icon-notebook-pen"></use></svg> <?= e(t('admin.content.tab_posts')) ?></a>
+                <a href="<?= base_path() ?>/admin/content.php?tab=pages"<?= $tab === 'pages' ? ' class="current" aria-current="page"' : '' ?>><svg class="icon" aria-hidden="true"><use href="#icon-file-text"></use></svg> <?= e(t('admin.content.tab_pages')) ?></a>
+            </nav>
+            <?php if ($tab === 'posts'): ?>
                 <?php if ($availableLayouts): ?>
-                    <button type="button" id="new-post-button">
+                    <button type="button" id="new-post-button" class="save">
                         <svg class="icon" aria-hidden="true"><use href="#icon-file-plus-corner"></use></svg>
                         <?= e(t('admin.content.new_post')) ?>
                     </button>
@@ -91,12 +82,27 @@ require __DIR__ . '/../includes/admin-head.php';
                     })();
                     </script>
                 <?php else: ?>
-                    <a href="<?= base_path() ?>/admin/edit-post.php?action=new">
+                    <a class="save" href="<?= base_path() ?>/admin/edit-post.php?action=new">
                         <svg class="icon" aria-hidden="true"><use href="#icon-file-plus-corner"></use></svg>
                         <?= e(t('admin.content.new_post')) ?>
                     </a>
                 <?php endif; ?>
-            </nav>
+            <?php else: ?>
+                <a class="save" href="<?= base_path() ?>/admin/edit-page.php?action=new">
+                    <svg class="icon" aria-hidden="true"><use href="#icon-file-text"></use></svg>
+                    <?= e(t('admin.content.new_page')) ?>
+                </a>
+            <?php endif; ?>
+        </div>
+
+        <?php if ($tab === 'posts'): ?>
+
+            <?php if (!empty($_GET['saved'])): ?>
+                <p class="notice" data-auto-dismiss><?= e(t('admin.content.notice_post_saved')) ?></p>
+            <?php endif; ?>
+            <?php if (!empty($_GET['deleted'])): ?>
+                <p class="notice" data-auto-dismiss><?= e(t('admin.content.notice_post_deleted')) ?></p>
+            <?php endif; ?>
 
             <form method="get" class="admin-search">
                 <input type="hidden" name="tab" value="posts">
@@ -145,13 +151,6 @@ require __DIR__ . '/../includes/admin-head.php';
             <?php if (!empty($_GET['deleted'])): ?>
                 <p class="notice" data-auto-dismiss><?= e(t('admin.content.notice_page_deleted')) ?></p>
             <?php endif; ?>
-
-            <nav class="editor-actions">
-                <a href="<?= base_path() ?>/admin/edit-page.php?action=new">
-                    <svg class="icon" aria-hidden="true"><use href="#icon-file-plus-corner"></use></svg>
-                    <?= e(t('admin.content.new_page')) ?>
-                </a>
-            </nav>
 
             <?php if (!$pages): ?>
                 <p><?= e(t('admin.content.no_pages')) ?></p>

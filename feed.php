@@ -70,43 +70,30 @@ function absolutize_feed_html(string $html, string $baseUrl, string $postUrl = '
         return $html;
     }
 
-    $doc = new DOMDocument();
-    libxml_use_internal_errors(true);
-    $doc->loadHTML('<meta charset="utf-8">' . $html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-    libxml_clear_errors();
+    // Temporarily replace <pre>/<code> blocks so their contents are not modified.
+    $placeholders = [];
+    $html = preg_replace_callback(
+        '/<(pre|code)[^>]*>.*?<\/\1>/si',
+        function ($match) use (&$placeholders): string {
+            $key = "\x00PH_" . count($placeholders) . "\x00";
+            $placeholders[$key] = $match[0];
+            return $key;
+        },
+        $html
+    ) ?? $html;
 
-    $xpath = new DOMXPath($doc);
-
-    // Absolutize href attributes, skipping <code> and <pre> descendants
-    foreach ($xpath->query('//*[@href and not(ancestor::code) and not(ancestor::pre)]') as $node) {
-        $href = $node->getAttribute('href');
-        if (str_starts_with($href, '/')) {
-            $node->setAttribute('href', $baseUrl . $href);
-        } elseif ($postUrl !== '' && str_starts_with($href, '#')) {
-            $node->setAttribute('href', $postUrl . $href);
-        }
+    $html = preg_replace('/href="\//', 'href="' . $baseUrl . '/', $html) ?? $html;
+    $html = preg_replace('/src="\//', 'src="' . $baseUrl . '/', $html) ?? $html;
+    if ($postUrl !== '') {
+        $html = preg_replace('/href="#/', 'href="' . $postUrl . '#', $html) ?? $html;
     }
 
-    // Absolutize src attributes, skipping <code> and <pre> descendants
-    foreach ($xpath->query('//*[@src and not(ancestor::code) and not(ancestor::pre)]') as $node) {
-        $src = $node->getAttribute('src');
-        if (str_starts_with($src, '/')) {
-            $node->setAttribute('src', $baseUrl . $src);
-        }
+    // Restore <pre>/<code> blocks.
+    if ($placeholders !== []) {
+        $html = str_replace(array_keys($placeholders), array_values($placeholders), $html);
     }
 
-    // Extract just the body content (strip the wrapping html/body tags loadHTML adds)
-    $body = $doc->getElementsByTagName('body')->item(0);
-    if ($body === null) {
-        return $html;
-    }
-
-    $result = '';
-    foreach ($body->childNodes as $child) {
-        $result .= $doc->saveHTML($child);
-    }
-
-    return $result;
+    return $html;
 }
 
 echo '<?xml version="1.0" encoding="UTF-8"?>';

@@ -81,7 +81,7 @@ return [
             'page_title'           => 'Dashboard - Pure Blog',
             'stat_published'       => 'Published posts',
             'stat_total_words'     => 'Total words',
-            'stat_books'           => 'Books equivalent',
+            'stat_books'           => 'Equivalent books',
             'stat_avg_words'       => 'Avg. words per post',
             'stat_this_year'       => 'Posts in {year}',
             'stat_top_tags'        => 'Top tags',
@@ -90,6 +90,10 @@ return [
             'chart_all_months'     => 'Posts by month — all time',
             'chart_all_days'       => 'Posts by day of week — all time',
             'all_tags'             => 'All tags',
+            'write_post'           => 'Write a post',
+            'version_label'        => 'Pure Blog version',
+            'version_uptodate'     => 'Up to date, good job 👍🏻',
+            'version_update_link'  => '{latest} available — update now →',
         ],
 
         'content' => [

@@ -105,15 +105,86 @@ for ($d = 1; $d <= 7; $d++) {
     $dayLabels[$d] = t('date.days_short.' . ($d % 7));
 }
 
+// Version check — cached for 6 hours to avoid a GitHub API call on every load
+$currentVersion   = detect_current_pureblog_version();
+$versionCacheFile = PUREBLOG_BASE_PATH . '/content/.version-cache';
+$latestVersion    = '';
+$cacheAge         = is_file($versionCacheFile) ? (time() - (int) @filemtime($versionCacheFile)) : PHP_INT_MAX;
+if ($cacheAge > 21600) {
+    $ctx  = stream_context_create(['http' => [
+        'timeout' => 3,
+        'header'  => "User-Agent: Pureblog-Dashboard\r\nAccept: application/vnd.github+json\r\n",
+        'ignore_errors' => true,
+    ]]);
+    $json = @file_get_contents('https://api.github.com/repos/kevquirk/pureblog/releases/latest', false, $ctx);
+    if (is_string($json)) {
+        $data = @json_decode($json, true);
+        if (is_array($data) && isset($data['tag_name']) && is_string($data['tag_name'])) {
+            $latestVersion = trim($data['tag_name']);
+            @file_put_contents($versionCacheFile, $latestVersion);
+        }
+    }
+} else {
+    $cached = @file_get_contents($versionCacheFile);
+    $latestVersion = is_string($cached) ? trim($cached) : '';
+}
+$updateAvailable = $latestVersion !== '' && $currentVersion !== 'unknown' && !versions_match($currentVersion, $latestVersion);
+
 $fontStack  = font_stack_css($config['theme']['admin_font_stack'] ?? 'sans');
 $adminTitle = t('admin.dashboard.page_title');
 require __DIR__ . '/../includes/admin-head.php';
 ?>
     <main class="mid">
 
+        <p class="dashboard-write-post">
+            <a class="save" href="<?= base_path() ?>/admin/edit-post.php?action=new">
+                <svg class="icon" aria-hidden="true"><use href="#icon-file-plus-corner"></use></svg>
+                <?= e(t('admin.dashboard.write_post')) ?>
+            </a>
+        </p>
+
+        <?php if ($currentVersion !== 'unknown'): ?>
+        <div class="dashboard-stat-card dashboard-version-card">
+            <p class="dashboard-stat-label"><?= e(t('admin.dashboard.version_label')) ?></p>
+            <p class="dashboard-stat-value"><?= e($currentVersion) ?></p>
+            <?php if ($updateAvailable): ?>
+                <a class="dashboard-version-update" href="<?= base_path() ?>/admin/settings-updates.php"><?= e(t('admin.dashboard.version_update_link', ['latest' => $latestVersion])) ?></a>
+            <?php elseif ($latestVersion !== ''): ?>
+                <p class="dashboard-version-uptodate"><?= e(t('admin.dashboard.version_uptodate')) ?></p>
+            <?php endif; ?>
+        </div>
+        <?php endif; ?>
+
+        <div class="dashboard-stats-3">
+            <div class="dashboard-stat-card dashboard-stat-card-metric">
+                <p class="dashboard-stat-label"><?= e(t('admin.dashboard.stat_published')) ?></p>
+                <p class="dashboard-stat-value"><?= e(number_format($publishedCount)) ?></p>
+            </div>
+            <div class="dashboard-stat-card dashboard-stat-card-metric">
+                <p class="dashboard-stat-label"><?= e(t('admin.dashboard.stat_total_words')) ?></p>
+                <p class="dashboard-stat-value"><?= e(number_format($totalWords)) ?></p>
+            </div>
+            <div class="dashboard-stat-card dashboard-stat-card-metric">
+                <p class="dashboard-stat-label"><?= e(t('admin.dashboard.stat_books')) ?></p>
+                <p class="dashboard-stat-value"><?= e(number_format($booksEquivalent, 1)) ?></p>
+            </div>
+            <div class="dashboard-stat-card dashboard-stat-card-metric">
+                <p class="dashboard-stat-label"><?= e(t('admin.dashboard.stat_this_year', ['year' => $currentYear])) ?></p>
+                <p class="dashboard-stat-value"><?= e((string) $publishedThisYear) ?></p>
+            </div>
+            <div class="dashboard-stat-card dashboard-stat-card-metric">
+                <p class="dashboard-stat-label"><?= e(t('admin.dashboard.stat_avg_words')) ?></p>
+                <p class="dashboard-stat-value"><?= e(number_format($avgWordsAllTime)) ?></p>
+            </div>
+            <div class="dashboard-stat-card dashboard-stat-card-tags">
+                <p class="dashboard-stat-label"><?= e(t('admin.dashboard.stat_top_tags')) ?></p>
+                <p class="dashboard-stat-value dashboard-stat-tags"><?= $topTagsLabel ?></p>
+            </div>
+        </div>
+
         <?php $chartTotal = array_sum(array_column($chartMonths, 'count')); ?>
         <?php if ($chartTotal > 0): ?>
-        <p class="dashboard-chart-title"><?= e(t('admin.dashboard.chart_title')) ?></p>
+        <h2 class="dashboard-h2"><?= e(t('admin.dashboard.chart_title')) ?></h2>
         <div class="dashboard-chart dashboard-chart-full" aria-label="<?= e(t('admin.dashboard.chart_title')) ?>">
             <?php foreach ($chartMonths as $cm): ?>
                 <?php $barPx = $cm['count'] > 0 ? max(3, (int) round(($cm['count'] / $maxChartCount) * 120)) : 0; ?>
@@ -126,39 +197,9 @@ require __DIR__ . '/../includes/admin-head.php';
         </div>
         <?php endif; ?>
 
-        <div class="dashboard-stats-3">
-            <article class="dashboard-stat-card dashboard-stat-card-metric">
-                <p class="dashboard-stat-label"><?= e(t('admin.dashboard.stat_published')) ?></p>
-                <p class="dashboard-stat-value"><?= e(number_format($publishedCount)) ?></p>
-            </article>
-            <article class="dashboard-stat-card dashboard-stat-card-metric">
-                <p class="dashboard-stat-label"><?= e(t('admin.dashboard.stat_total_words')) ?></p>
-                <p class="dashboard-stat-value"><?= e(number_format($totalWords)) ?></p>
-            </article>
-            <article class="dashboard-stat-card dashboard-stat-card-metric">
-                <p class="dashboard-stat-label"><?= e(t('admin.dashboard.stat_books')) ?></p>
-                <p class="dashboard-stat-value"><?= e(number_format($booksEquivalent, 1)) ?></p>
-            </article>
-        </div>
-
-        <div class="dashboard-stats-3">
-            <article class="dashboard-stat-card dashboard-stat-card-metric">
-                <p class="dashboard-stat-label"><?= e(t('admin.dashboard.stat_this_year', ['year' => $currentYear])) ?></p>
-                <p class="dashboard-stat-value"><?= e((string) $publishedThisYear) ?></p>
-            </article>
-            <article class="dashboard-stat-card dashboard-stat-card-metric">
-                <p class="dashboard-stat-label"><?= e(t('admin.dashboard.stat_avg_words')) ?></p>
-                <p class="dashboard-stat-value"><?= e(number_format($avgWordsAllTime)) ?></p>
-            </article>
-            <article class="dashboard-stat-card dashboard-stat-card-tags">
-                <p class="dashboard-stat-label"><?= e(t('admin.dashboard.stat_top_tags')) ?></p>
-                <p class="dashboard-stat-value dashboard-stat-tags"><?= $topTagsLabel ?></p>
-            </article>
-        </div>
-
         <div class="dashboard-chart-pair">
             <div class="dashboard-chart-section">
-                <p class="dashboard-chart-title"><?= e(t('admin.dashboard.chart_all_months')) ?></p>
+                <h2 class="dashboard-h2"><?= e(t('admin.dashboard.chart_all_months')) ?></h2>
                 <div class="dashboard-chart" aria-label="<?= e(t('admin.dashboard.chart_all_months')) ?>">
                     <?php for ($m = 1; $m <= 12; $m++): ?>
                         <?php $barPx = $allTimeMonthCounts[$m] > 0 ? max(3, (int) round(($allTimeMonthCounts[$m] / $maxMonthCount) * 100)) : 0; ?>
@@ -171,7 +212,7 @@ require __DIR__ . '/../includes/admin-head.php';
                 </div>
             </div>
             <div class="dashboard-chart-section">
-                <p class="dashboard-chart-title"><?= e(t('admin.dashboard.chart_all_days')) ?></p>
+                <h2 class="dashboard-h2"><?= e(t('admin.dashboard.chart_all_days')) ?></h2>
                 <div class="dashboard-chart" aria-label="<?= e(t('admin.dashboard.chart_all_days')) ?>">
                     <?php for ($d = 1; $d <= 7; $d++): ?>
                         <?php $barPx = $allTimeDayCounts[$d] > 0 ? max(3, (int) round(($allTimeDayCounts[$d] / $maxDayCount) * 100)) : 0; ?>
@@ -187,7 +228,7 @@ require __DIR__ . '/../includes/admin-head.php';
 
         <?php if ($tagCounts): ?>
         <div class="dashboard-all-tags">
-            <p class="dashboard-chart-title"><?= e(t('admin.dashboard.all_tags')) ?></p>
+            <h2 class="dashboard-h2"><?= e(t('admin.dashboard.all_tags')) ?></h2>
             <ul class="dashboard-all-tags-list">
                 <?php foreach ($tagCounts as $tag => $count): ?>
                     <li><a href="<?= base_path() ?>/<?= urlencode((string) $tag) ?>"><?= e((string) $tag) ?></a> <span class="dashboard-tag-count">(<?= (int) $count ?>)</span></li>

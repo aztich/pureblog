@@ -93,6 +93,7 @@ header, footer {
 footer {
     text-align: center;
     padding: 0 1rem;
+    margin-top: 6rem;
 }
 
 article {
@@ -238,6 +239,10 @@ select {
     background: var(--input-bg);
 }
 
+input[type="search"] {
+    margin-bottom: 2.5rem;
+}
+
 input, textarea, select {
     margin-bottom: 1.5rem;
 }
@@ -349,7 +354,9 @@ a.button,
 .link-button,
 .admin-nav-list a,
 .editor-actions button,
-.editor-actions a {
+.editor-actions a,
+.content-toolbar a,
+.dashboard-write-post a {
     cursor: pointer;
     background: var(--bg-color);
     color: var(--text-color);
@@ -370,14 +377,19 @@ a.button:hover,
 .link-button:hover,
 .admin-nav-list a.current,
 .admin-nav-list a:hover,
-.editor-actions a:hover {
+.editor-actions a:hover,
+.content-toolbar a:hover,
+.content-tabs a.current,
+.dashboard-write-post a:hover {
     background-color: var(--text-color);
     color: var(--bg-color);
 }
 
 .admin-nav-list a,
 .editor-actions button,
-.editor-actions a {
+.editor-actions a,
+.content-toolbar a,
+.dashboard-write-post a {
     display: inline-flex;
     align-items: center;
     line-height: 1.2;
@@ -415,11 +427,13 @@ button:disabled:hover {
 }
 
 .save,
+a.save,
 button.save {
     color: var(--green);
     border-color: var(--green);
 }
 
+a.save:hover,
 button.save:hover {
     background: var(--green);
     color: var(--bg-color);
@@ -506,9 +520,9 @@ th, td {
 }
 
 .admin-list-item {
-    padding: 0.75rem 0;
-    margin-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border-color);
+    padding: 0.75rem;
+    border: 1px solid;
+    background: var(--input-bg);
 }
 
 .admin-list-title {
@@ -541,6 +555,11 @@ th, td {
     color: var(--red);
 }
 
+.dashboard-h2 {
+    font-size: 1.4rem;
+    margin-top: 4rem;
+}
+
 .dashboard-stats-3 {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -564,7 +583,6 @@ th, td {
 }
 
 .dashboard-stat-card-tags {
-    min-height: 9rem;
     position: relative;
 }
 
@@ -1022,42 +1040,19 @@ html[data-admin-theme="dark"] .cm-s-default .cm-meta {
     word-break: break-word;
 }
 
-/* Content tabs */
-.content-tabs {
-    border-bottom: 1px solid var(--border-color);
+/* Content toolbar (tabs + new button row) */
+.content-toolbar {
+    align-items: center;
+    border-top: 1px solid var(--text-color);
+    border-bottom: 1px solid var(--text-color);
     display: flex;
-    gap: 0;
+    gap: 0.5rem;
+    justify-content: space-between;
     margin: 2rem 0 1.5rem;
-}
-
-.content-tabs a {
-    border-bottom: 2px solid transparent;
-    color: inherit;
-    font-weight: 500;
-    margin-bottom: -1px;
-    padding: 0.5rem 1.1rem;
-    text-decoration: none;
-    transition: border-color 0.15s, color 0.15s;
-}
-
-.content-tabs a:hover {
-    border-bottom-color: var(--border-color);
-}
-
-.content-tabs a.current {
-    border-bottom-color: var(--accent-color);
-    color: var(--accent-color);
+    padding: 0.5rem 0;
 }
 
 /* Monthly bar chart */
-.dashboard-chart-title {
-    font-size: 0.85rem;
-    font-weight: bold;
-    margin: 1.5rem 0 0.5rem;
-    opacity: 0.8;
-    text-transform: uppercase;
-}
-
 .dashboard-chart {
     align-items: flex-end;
     border-bottom: 1px solid var(--border-color);
@@ -1100,6 +1095,33 @@ html[data-admin-theme="dark"] .cm-s-default .cm-meta {
     width: 100%;
 }
 
+.dashboard-write-post {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    font-size: 120%;
+}
+
+.dashboard-version-card {
+    margin: 1.5rem 0 0;
+}
+
+.dashboard-version-card .dashboard-stat-value {
+    font-size: 1.4rem;
+}
+
+.dashboard-version-update {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-top: 0.5rem;
+}
+
+.dashboard-version-uptodate {
+    font-size: 0.85rem;
+    margin: 0.5rem 0 0;
+    opacity: 0.7;
+}
+
 .dashboard-chart-full {
     margin-top: 0.5rem;
 }
@@ -1107,7 +1129,7 @@ html[data-admin-theme="dark"] .cm-s-default .cm-meta {
 /* Side-by-side charts */
 .dashboard-chart-pair {
     display: flex;
-    gap: 1.5rem;
+    gap: 2rem;
     margin-top: 1.5rem;
 }
 
@@ -1122,7 +1144,7 @@ html[data-admin-theme="dark"] .cm-s-default .cm-meta {
 }
 
 .dashboard-all-tags-list {
-    columns: 3;
+    columns: 4;
     gap: 0.5rem 1.5rem;
     list-style: none;
     margin: 0.5rem 0 0;

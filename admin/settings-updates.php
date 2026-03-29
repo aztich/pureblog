@@ -72,52 +72,6 @@ function fetch_latest_pureblog_release(): array
     ];
 }
 
-function detect_current_pureblog_version(): string
-{
-    $versionFile = dirname(__DIR__) . '/VERSION';
-    if (is_file($versionFile)) {
-        $raw = @file_get_contents($versionFile);
-        if (is_string($raw)) {
-            $fromFile = trim($raw);
-            if ($fromFile !== '') {
-                return $fromFile;
-            }
-        }
-    }
-
-    if (defined('PUREBLOG_VERSION') && is_string(PUREBLOG_VERSION) && PUREBLOG_VERSION !== '' && strtolower(PUREBLOG_VERSION) !== 'unknown') {
-        return PUREBLOG_VERSION;
-    }
-
-    return 'unknown';
-}
-
-function normalize_version_label(string $version): string
-{
-    $trimmed = trim($version);
-    if ($trimmed === '') {
-        return 'unknown';
-    }
-
-    return ltrim($trimmed, "vV");
-}
-
-function versions_match(string $current, string $latest): bool
-{
-    $a = strtolower(trim($current));
-    $b = strtolower(trim($latest));
-
-    if ($a === '' || $b === '') {
-        return false;
-    }
-
-    // Treat "v1.4.0" and "1.4.0" as equivalent.
-    $a = ltrim($a, 'v');
-    $b = ltrim($b, 'v');
-
-    return $a === $b;
-}
-
 /**
  * @return list<string>
  */
