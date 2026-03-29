@@ -774,6 +774,24 @@ function format_datetime_for_display(?string $value, array $config, ?string $for
     return _lang_translate_date($dt->format($effectiveFormat));
 }
 
+function relative_time(int $timestamp): string
+{
+    $diff = max(0, time() - $timestamp);
+    if ($diff < 60) {
+        return t('admin.dashboard.time_just_now');
+    }
+    if ($diff < 3600) {
+        $n = (int) floor($diff / 60);
+        return t($n === 1 ? 'admin.dashboard.time_minute_ago' : 'admin.dashboard.time_minutes_ago', ['n' => $n]);
+    }
+    if ($diff < 86400) {
+        $n = (int) floor($diff / 3600);
+        return t($n === 1 ? 'admin.dashboard.time_hour_ago' : 'admin.dashboard.time_hours_ago', ['n' => $n]);
+    }
+    $n = (int) floor($diff / 86400);
+    return t($n === 1 ? 'admin.dashboard.time_day_ago' : 'admin.dashboard.time_days_ago', ['n' => $n]);
+}
+
 function format_post_date_for_rss(?string $value, array $config): string
 {
     $dt = parse_post_datetime_with_timezone($value, $config);

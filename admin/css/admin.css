@@ -356,7 +356,7 @@ a.button,
 .editor-actions button,
 .editor-actions a,
 .content-toolbar a,
-.dashboard-write-post a {
+.dashboard-write-post-card a {
     cursor: pointer;
     background: var(--bg-color);
     color: var(--text-color);
@@ -380,7 +380,7 @@ a.button:hover,
 .editor-actions a:hover,
 .content-toolbar a:hover,
 .content-tabs a.current,
-.dashboard-write-post a:hover {
+.dashboard-write-post-card a:hover {
     background-color: var(--text-color);
     color: var(--bg-color);
 }
@@ -389,7 +389,7 @@ a.button:hover,
 .editor-actions button,
 .editor-actions a,
 .content-toolbar a,
-.dashboard-write-post a {
+.dashboard-write-post-card a {
     display: inline-flex;
     align-items: center;
     line-height: 1.2;
@@ -1085,24 +1085,37 @@ html[data-admin-theme="dark"] .cm-s-default .cm-meta {
 }
 
 .dashboard-chart-label {
-    border-top: 1px solid var(--border-color);
-    color: inherit;
-    font-size: 0.65rem;
-    margin-top: 0.35rem;
-    opacity: 0.7;
-    padding-top: 0.35rem;
-    text-align: center;
-    width: 100%;
+  border-top: 1px solid var(--border-color);
+  color: inherit;
+  font-size: 0.75rem;
+  padding: 0.25rem 0;
+  text-align: center;
+  width: 100%;
+  text-transform: uppercase;
 }
 
-.dashboard-write-post {
-    text-align: center;
-    margin-bottom: 2.5rem;
-    font-size: 120%;
+.dashboard-write-post-card {
+    align-items: center;
+    display: flex;
+    justify-content: center;
 }
 
 .dashboard-version-card {
-    margin: 1.5rem 0 0;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 9rem;
+    position: relative;
+}
+
+.dashboard-version-card .dashboard-stat-label {
+    position: absolute;
+    top: 0.9rem;
+    left: 0.9rem;
+    right: 0.9rem;
+    margin: 0;
+    text-align: left;
 }
 
 .dashboard-version-card .dashboard-stat-value {

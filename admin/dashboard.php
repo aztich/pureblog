@@ -21,11 +21,13 @@ $tagCounts          = [];
 $totalWords         = 0;
 $allTimeMonthCounts = array_fill(1, 12, 0);
 $allTimeDayCounts   = array_fill(1, 7, 0); // 1=Mon … 7=Sun (ISO 8601)
+$yearCounts         = [];
 
 // Build rolling 12-month chart slots (oldest first)
 $chartMonths = [];
+$firstOfMonth = new DateTimeImmutable($now->format('Y-m-01'), $tz);
 for ($i = 11; $i >= 0; $i--) {
-    $dt    = $now->modify("-{$i} months");
+    $dt    = $firstOfMonth->modify("-{$i} months");
     $month = (int) $dt->format('n');
     $chartMonths[] = [
         'year'  => (int) $dt->format('Y'),
@@ -61,6 +63,7 @@ foreach ($publishedPosts as $post) {
 
         $allTimeMonthCounts[$postMon]++;
         $allTimeDayCounts[$postDay]++;
+        $yearCounts[$postYear] = ($yearCounts[$postYear] ?? 0) + 1;
     }
 
     $tags = $post['tags'] ?? [];
@@ -75,8 +78,21 @@ foreach ($publishedPosts as $post) {
     }
 }
 
+ksort($yearCounts);
+$maxYearCount = !empty($yearCounts) ? max($yearCounts) : 1;
+
 $avgWordsAllTime = $publishedCount > 0 ? (int) round($totalWords / $publishedCount) : 0;
 $booksEquivalent = $totalWords > 0 ? round($totalWords / 80000, 1) : 0;
+
+// Last published time
+$lastTimestamp = 0;
+foreach ($publishedPosts as $post) {
+    $ts = (int) ($post['timestamp'] ?? 0);
+    if ($ts > $lastTimestamp) {
+        $lastTimestamp = $ts;
+    }
+}
+$lastPublishedAgo = $lastTimestamp > 0 ? relative_time($lastTimestamp) : t('admin.dashboard.no_posts_yet');
 
 $maxChartCount = max(1, ...array_column($chartMonths, 'count'));
 $maxMonthCount = max(1, max($allTimeMonthCounts));
@@ -136,26 +152,30 @@ require __DIR__ . '/../includes/admin-head.php';
 ?>
     <main class="mid">
 
-        <p class="dashboard-write-post">
-            <a class="save" href="<?= base_path() ?>/admin/edit-post.php?action=new">
-                <svg class="icon" aria-hidden="true"><use href="#icon-file-plus-corner"></use></svg>
-                <?= e(t('admin.dashboard.write_post')) ?>
-            </a>
-        </p>
-
-        <?php if ($currentVersion !== 'unknown'): ?>
-        <div class="dashboard-stat-card dashboard-version-card">
-            <p class="dashboard-stat-label"><?= e(t('admin.dashboard.version_label')) ?></p>
-            <p class="dashboard-stat-value"><?= e($currentVersion) ?></p>
-            <?php if ($updateAvailable): ?>
-                <a class="dashboard-version-update" href="<?= base_path() ?>/admin/settings-updates.php"><?= e(t('admin.dashboard.version_update_link', ['latest' => $latestVersion])) ?></a>
-            <?php elseif ($latestVersion !== ''): ?>
-                <p class="dashboard-version-uptodate"><?= e(t('admin.dashboard.version_uptodate')) ?></p>
-            <?php endif; ?>
-        </div>
-        <?php endif; ?>
-
         <div class="dashboard-stats-3">
+            <?php if ($currentVersion !== 'unknown'): ?>
+            <div class="dashboard-stat-card dashboard-version-card">
+                <p class="dashboard-stat-label"><?= e(t('admin.dashboard.version_label')) ?></p>
+                <p class="dashboard-stat-value"><?= e($currentVersion) ?></p>
+                <?php if ($updateAvailable): ?>
+                    <a class="dashboard-version-update" href="<?= base_path() ?>/admin/settings-updates.php"><?= e(t('admin.dashboard.version_update_link', ['latest' => $latestVersion])) ?></a>
+                <?php elseif ($latestVersion !== ''): ?>
+                    <p class="dashboard-version-uptodate"><?= e(t('admin.dashboard.version_uptodate')) ?></p>
+                <?php endif; ?>
+            </div>
+            <?php else: ?>
+            <div class="dashboard-stat-card"></div>
+            <?php endif; ?>
+            <div class="dashboard-stat-card dashboard-stat-card-metric">
+                <p class="dashboard-stat-label"><?= e(t('admin.dashboard.last_published')) ?></p>
+                <p class="dashboard-stat-value"><?= e($lastPublishedAgo) ?></p>
+            </div>
+            <div class="dashboard-stat-card dashboard-write-post-card">
+                <a class="save" href="<?= base_path() ?>/admin/edit-post.php?action=new">
+                    <svg class="icon" aria-hidden="true"><use href="#icon-file-plus-corner"></use></svg>
+                    <?= e(t('admin.dashboard.write_post')) ?>
+                </a>
+            </div>
             <div class="dashboard-stat-card dashboard-stat-card-metric">
                 <p class="dashboard-stat-label"><?= e(t('admin.dashboard.stat_published')) ?></p>
                 <p class="dashboard-stat-value"><?= e(number_format($publishedCount)) ?></p>
@@ -192,6 +212,20 @@ require __DIR__ . '/../includes/admin-head.php';
                     <span class="dashboard-chart-count"><?= $cm['count'] > 0 ? $cm['count'] : '' ?></span>
                     <div class="dashboard-chart-bar" style="height: <?= $barPx ?>px"></div>
                     <span class="dashboard-chart-label"><?= e($cm['label']) ?></span>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <?php endif; ?>
+
+        <?php if (!empty($yearCounts)): ?>
+        <h2 class="dashboard-h2"><?= e(t('admin.dashboard.chart_all_years')) ?></h2>
+        <div class="dashboard-chart dashboard-chart-full" aria-label="<?= e(t('admin.dashboard.chart_all_years')) ?>">
+            <?php foreach ($yearCounts as $year => $count): ?>
+                <?php $barPx = $count > 0 ? max(3, (int) round(($count / $maxYearCount) * 120)) : 0; ?>
+                <div class="dashboard-chart-col">
+                    <span class="dashboard-chart-count"><?= $count ?></span>
+                    <div class="dashboard-chart-bar" style="height: <?= $barPx ?>px"></div>
+                    <span class="dashboard-chart-label"><?= e((string) $year) ?></span>
                 </div>
             <?php endforeach; ?>
         </div>
