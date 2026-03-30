@@ -209,11 +209,20 @@ require __DIR__ . '/../includes/admin-head.php';
         <div class="dashboard-chart dashboard-chart-full" aria-label="<?= e(t('admin.dashboard.chart_title')) ?>">
             <?php foreach ($chartMonths as $cm): ?>
                 <?php $barPx = $cm['count'] > 0 ? max(3, (int) round(($cm['count'] / $maxChartCount) * 120)) : 0; ?>
+                <?php $colUrl = base_path() . '/admin/content.php?tab=posts&year=' . $cm['year'] . '&month=' . $cm['month']; ?>
+                <?php if ($cm['count'] > 0): ?>
+                <a class="dashboard-chart-col" href="<?= e($colUrl) ?>">
+                <?php else: ?>
                 <div class="dashboard-chart-col">
+                <?php endif; ?>
                     <span class="dashboard-chart-count"><?= $cm['count'] > 0 ? $cm['count'] : '' ?></span>
                     <div class="dashboard-chart-bar" style="height: <?= $barPx ?>px"></div>
                     <span class="dashboard-chart-label"><?= e($cm['label']) ?></span>
+                <?php if ($cm['count'] > 0): ?>
+                </a>
+                <?php else: ?>
                 </div>
+                <?php endif; ?>
             <?php endforeach; ?>
         </div>
         <?php endif; ?>
@@ -240,11 +249,11 @@ require __DIR__ . '/../includes/admin-head.php';
         <div class="dashboard-chart dashboard-chart-full" aria-label="<?= e(t('admin.dashboard.chart_all_years')) ?>">
             <?php foreach ($yearCounts as $year => $count): ?>
                 <?php $barPx = $count > 0 ? max(3, (int) round(($count / $maxYearCount) * 120)) : 0; ?>
-                <div class="dashboard-chart-col">
+                <a class="dashboard-chart-col" href="<?= e(base_path() . '/admin/content.php?tab=posts&year=' . $year) ?>">
                     <span class="dashboard-chart-count"><?= $count ?></span>
                     <div class="dashboard-chart-bar" style="height: <?= $barPx ?>px"></div>
                     <span class="dashboard-chart-label"><?= e((string) $year) ?></span>
-                </div>
+                </a>
             <?php endforeach; ?>
         </div>
         <?php endif; ?>

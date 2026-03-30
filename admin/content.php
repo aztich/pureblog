@@ -16,9 +16,17 @@ if (!in_array($tab, ['posts', 'pages'], true)) {
 }
 
 // Posts data
-$perPage = 20;
-$page = max(1, (int) ($_GET['page'] ?? 1));
-$search = trim((string) ($_GET['q'] ?? ''));
+$perPage     = 20;
+$page        = max(1, (int) ($_GET['page'] ?? 1));
+$search      = trim((string) ($_GET['q'] ?? ''));
+$filterYear  = isset($_GET['year'])  ? (int) $_GET['year']  : 0;
+$filterMonth = isset($_GET['month']) ? (int) $_GET['month'] : 0;
+if ($filterYear < 2000 || $filterYear > 2100) {
+    $filterYear = 0;
+}
+if ($filterMonth < 1 || $filterMonth > 12) {
+    $filterMonth = 0;
+}
 $allPosts = get_all_posts(true);
 usort($allPosts, function (array $a, array $b): int {
     if ($a['status'] !== $b['status']) {
@@ -27,6 +35,31 @@ usort($allPosts, function (array $a, array $b): int {
     return ($b['timestamp'] <=> $a['timestamp']);
 });
 $filteredPosts = filter_posts_by_query($allPosts, $search);
+if ($filterYear > 0) {
+    $filteredPosts = array_values(array_filter($filteredPosts, function (array $post) use ($filterYear, $filterMonth): bool {
+        $ts = (int) ($post['timestamp'] ?? 0);
+        if ($ts === 0) {
+            return false;
+        }
+        $dt = new DateTimeImmutable('@' . $ts);
+        if ((int) $dt->format('Y') !== $filterYear) {
+            return false;
+        }
+        return $filterMonth === 0 || (int) $dt->format('n') === $filterMonth;
+    }));
+}
+
+// Build a human-readable label and clear-URL for any active date filter
+$filterLabel   = '';
+$filterClearUrl = '';
+if ($filterYear > 0) {
+    $filterLabel = $filterMonth > 0
+        ? t('date.months.' . ($filterMonth - 1)) . ' ' . $filterYear
+        : (string) $filterYear;
+    $clearParams = array_filter(['tab' => $tab, 'q' => $search !== '' ? $search : null]);
+    $filterClearUrl = base_path() . '/admin/content.php?' . http_build_query($clearParams);
+}
+
 $totalPosts = count($filteredPosts);
 $totalPages = $totalPosts > 0 ? (int) ceil($totalPosts / $perPage) : 1;
 $offset = ($page - 1) * $perPage;
@@ -104,14 +137,29 @@ require __DIR__ . '/../includes/admin-head.php';
                 <p class="notice" data-auto-dismiss><?= e(t('admin.content.notice_post_deleted')) ?></p>
             <?php endif; ?>
 
+            <?php if ($filterLabel !== ''): ?>
+                <p class="notice notice-filter">
+                    <?= e(t('admin.content.filter_active', ['label' => $filterLabel])) ?>
+                    <a href="<?= e($filterClearUrl) ?>"><?= e(t('admin.content.filter_clear')) ?></a>
+                </p>
+            <?php endif; ?>
+
             <form method="get" class="admin-search">
                 <input type="hidden" name="tab" value="posts">
+                <?php if ($filterYear > 0): ?>
+                    <input type="hidden" name="year" value="<?= e((string) $filterYear) ?>">
+                    <?php if ($filterMonth > 0): ?>
+                        <input type="hidden" name="month" value="<?= e((string) $filterMonth) ?>">
+                    <?php endif; ?>
+                <?php endif; ?>
                 <label class="hidden" for="search"><?= e(t('admin.content.search_label')) ?></label>
                 <input type="search" id="search" name="q" value="<?= e($search) ?>" placeholder="<?= e(t('admin.content.search_placeholder')) ?>" autocomplete="off">
             </form>
 
             <?php if (!$posts): ?>
-                <?php if ($search !== ''): ?>
+                <?php if ($filterLabel !== ''): ?>
+                    <p><?= e(t('admin.content.no_posts_filtered', ['label' => $filterLabel])) ?></p>
+                <?php elseif ($search !== ''): ?>
                     <p><?= e(t('admin.content.no_posts_found', ['search' => $search])) ?></p>
                 <?php else: ?>
                     <p><?= e(t('admin.content.no_posts')) ?></p>
@@ -131,13 +179,18 @@ require __DIR__ . '/../includes/admin-head.php';
                     <?php endforeach; ?>
                 </ul>
                 <?php if ($totalPages > 1): ?>
-                    <?php $searchQuery = $search !== '' ? '&q=' . urlencode($search) : ''; ?>
+                    <?php
+                        $pageParams = ['tab' => 'posts'];
+                        if ($filterYear > 0)  { $pageParams['year']  = $filterYear; }
+                        if ($filterMonth > 0) { $pageParams['month'] = $filterMonth; }
+                        if ($search !== '')   { $pageParams['q']     = $search; }
+                    ?>
                     <nav class="pagination">
                         <?php if ($page > 1): ?>
-                            <a href="<?= base_path() ?>/admin/content.php?tab=posts&page=<?= e((string) ($page - 1)) ?><?= $searchQuery ?>"><?= e(t('admin.content.pagination_newer')) ?></a>
+                            <a href="<?= base_path() ?>/admin/content.php?<?= e(http_build_query($pageParams + ['page' => $page - 1])) ?>"><?= e(t('admin.content.pagination_newer')) ?></a>
                         <?php endif; ?>
                         <?php if ($page < $totalPages): ?>
-                            <a href="<?= base_path() ?>/admin/content.php?tab=posts&page=<?= e((string) ($page + 1)) ?><?= $searchQuery ?>"><?= e(t('admin.content.pagination_older')) ?></a>
+                            <a href="<?= base_path() ?>/admin/content.php?<?= e(http_build_query($pageParams + ['page' => $page + 1])) ?>"><?= e(t('admin.content.pagination_older')) ?></a>
                         <?php endif; ?>
                     </nav>
                 <?php endif; ?>
