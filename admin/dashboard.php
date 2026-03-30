@@ -113,7 +113,7 @@ uasort($tagCountsThisYear, static fn(int $a, int $b): int => $b <=> $a);
 $topTagEntries = [];
 $n = 0;
 foreach ($tagCounts as $tag => $count) {
-    $topTagEntries[] = '<strong>' . e((string) $tag) . '</strong> (' . (int) $count . ')';
+    $topTagEntries[] = '<a href="' . base_path() . '/tag/' . urlencode((string) $tag) . '"><strong>' . e((string) $tag) . '</strong></a> (' . (int) $count . ')';
     if (++$n >= 5) break;
 }
 $topTagsLabel = $topTagEntries ? implode(', ', $topTagEntries) : t('admin.dashboard.stat_no_tags');
@@ -121,7 +121,7 @@ $topTagsLabel = $topTagEntries ? implode(', ', $topTagEntries) : t('admin.dashbo
 $topTagEntriesThisYear = [];
 $n = 0;
 foreach ($tagCountsThisYear as $tag => $count) {
-    $topTagEntriesThisYear[] = '<strong>' . e((string) $tag) . '</strong> (' . (int) $count . ')';
+    $topTagEntriesThisYear[] = '<a href="' . base_path() . '/tag/' . urlencode((string) $tag) . '"><strong>' . e((string) $tag) . '</strong></a> (' . (int) $count . ')';
     if (++$n >= 5) break;
 }
 $topTagsThisYearLabel = $topTagEntriesThisYear ? implode(', ', $topTagEntriesThisYear) : t('admin.dashboard.stat_no_tags');
