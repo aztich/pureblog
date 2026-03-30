@@ -75,7 +75,11 @@ usort($pages, function (array $a, array $b): int {
     return ($a['title'] <=> $b['title']);
 });
 
-$fontStack = font_stack_css($config['theme']['admin_font_stack'] ?? 'sans');
+$fontStack    = font_stack_css($config['theme']['admin_font_stack'] ?? 'sans');
+$postDateFmt  = site_date_format($config);
+if (strpbrk($postDateFmt, 'HhGgi') === false) {
+    $postDateFmt .= ' @ H:i';
+}
 $adminTitle = t('admin.content.page_title');
 require __DIR__ . '/../includes/admin-head.php';
 ?>
@@ -172,7 +176,7 @@ require __DIR__ . '/../includes/admin-head.php';
                                 <?= e($post['title']) ?>
                             </a>
                             <div class="admin-list-meta">
-                                <span><svg class="icon" aria-hidden="true"><use href="#icon-calendar"></use></svg> <?= e(format_datetime_for_display((string) ($post['date'] ?? ''), $config, 'Y-m-d @ H:i')) ?></span>
+                                <span><svg class="icon" aria-hidden="true"><use href="#icon-calendar"></use></svg> <?= e(format_datetime_for_display((string) ($post['date'] ?? ''), $config, $postDateFmt)) ?></span>
                                 <span class="status <?= e($post['status']) ?>"><svg class="icon" aria-hidden="true"><use href="#icon-toggle-right"></use></svg> <?= e(t('admin.editor.status_' . $post['status'])) ?></span>
                             </div>
                         </li>
