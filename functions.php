@@ -1941,12 +1941,15 @@ function build_tag_index(): bool
             continue;
         }
         foreach ($post['tags'] ?? [] as $tag) {
-            $tagSlug = normalize_tag((string) $tag);
+            $tag = trim((string) $tag);
+            $tagSlug = normalize_tag($tag);
             if ($tagSlug === '') {
                 continue;
             }
-            $index[$tagSlug] ??= [];
-            $index[$tagSlug][] = $slug;
+            if (!isset($index[$tagSlug])) {
+                $index[$tagSlug] = ['name' => $tag, 'posts' => []];
+            }
+            $index[$tagSlug]['posts'][] = $slug;
         }
     }
 

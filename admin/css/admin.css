@@ -636,6 +636,7 @@ th, td {
     font-size: 1rem;
     font-weight: normal;
     margin-top: 2rem;
+    text-transform: capitalize;
 }
 
 .dashboard-stat-books {
@@ -1282,6 +1283,7 @@ a.dashboard-chart-col:hover .dashboard-chart-bar {
     list-style: none;
     margin: 0.5rem 0 0;
     padding: 0;
+    text-transform: capitalize;
 }
 
 .dashboard-all-tags-list li {

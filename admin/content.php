@@ -52,14 +52,14 @@ foreach ($allPosts as $p) {
     foreach (($p['tags'] ?? []) as $t) {
         $t = trim((string) $t);
         if ($t !== '') {
-            $availableTags[$t] = true;
+            $slug = normalize_tag($t);
+            $availableTags[$slug] ??= $t;
         }
     }
 }
 krsort($availableYears);
 ksort($availableTags);
 $availableYears = array_keys($availableYears);
-$availableTags  = array_keys($availableTags);
 
 // Apply filters
 $filteredPosts = filter_posts_by_query($allPosts, $search);
@@ -82,7 +82,7 @@ if ($filterYear > 0 || $filterMonth > 0) {
 if ($filterTag !== '') {
     $filteredPosts = array_values(array_filter($filteredPosts, function (array $post) use ($filterTag): bool {
         $tags = $post['tags'] ?? [];
-        return is_array($tags) && in_array($filterTag, array_map('strval', $tags), true);
+        return is_array($tags) && in_array(normalize_tag($filterTag), array_map(fn($t) => normalize_tag((string) $t), $tags), true);
     }));
 }
 if ($filterSince > 0) {
@@ -241,8 +241,8 @@ require __DIR__ . '/../includes/admin-head.php';
                                 <label for="filter-tag"><?= e(t('admin.content.filter_tag')) ?></label>
                                 <select id="filter-tag" name="tag">
                                     <option value=""><?= e(t('admin.content.filter_all_tags')) ?></option>
-                                    <?php foreach ($availableTags as $tagOption): ?>
-                                        <option value="<?= e($tagOption) ?>"<?= $filterTag === $tagOption ? ' selected' : '' ?>><?= e($tagOption) ?></option>
+                                    <?php foreach ($availableTags as $tagSlug => $tagDisplayName): ?>
+                                        <option value="<?= e($tagSlug) ?>"<?= $filterTag === $tagSlug ? ' selected' : '' ?>><?= e($tagDisplayName) ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>

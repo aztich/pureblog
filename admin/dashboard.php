@@ -20,6 +20,7 @@ $publishedThisYear  = 0;
 $totalWordsThisYear = 0;
 $tagCounts          = [];
 $tagCountsThisYear  = [];
+$tagDisplayNames    = [];
 $totalWords         = 0;
 $allTimeMonthCounts = array_fill(1, 12, 0);
 $allTimeDayCounts   = array_fill(1, 7, 0); // 1=Mon … 7=Sun (ISO 8601)
@@ -77,9 +78,11 @@ foreach ($publishedPosts as $post) {
     foreach ($tags as $tag) {
         $name = trim((string) $tag);
         if ($name !== '') {
-            $tagCounts[$name] = ($tagCounts[$name] ?? 0) + 1;
+            $slug = normalize_tag($name);
+            $tagDisplayNames[$slug] ??= $name;
+            $tagCounts[$slug] = ($tagCounts[$slug] ?? 0) + 1;
             if ($timestamp >= $recentCutoff) {
-                $tagCountsThisYear[$name] = ($tagCountsThisYear[$name] ?? 0) + 1;
+                $tagCountsThisYear[$slug] = ($tagCountsThisYear[$slug] ?? 0) + 1;
             }
         }
     }
@@ -113,7 +116,7 @@ uasort($tagCountsThisYear, static fn(int $a, int $b): int => $b <=> $a);
 $topTagEntries = [];
 $n = 0;
 foreach ($tagCounts as $tag => $count) {
-    $topTagEntries[] = '<a href="' . base_path() . '/admin/content.php?tab=posts&tag=' . urlencode((string) $tag) . '"><strong>' . e((string) $tag) . '</strong></a> (' . (int) $count . ')';
+    $topTagEntries[] = '<a href="' . base_path() . '/admin/content.php?tab=posts&tag=' . urlencode($tag) . '"><strong>' . e($tagDisplayNames[$tag] ?? $tag) . '</strong></a> (' . (int) $count . ')';
     if (++$n >= 5) break;
 }
 $topTagsLabel = $topTagEntries ? implode(', ', $topTagEntries) : t('admin.dashboard.stat_no_tags');
@@ -121,7 +124,7 @@ $topTagsLabel = $topTagEntries ? implode(', ', $topTagEntries) : t('admin.dashbo
 $topTagEntriesThisYear = [];
 $n = 0;
 foreach ($tagCountsThisYear as $tag => $count) {
-    $topTagEntriesThisYear[] = '<a href="' . base_path() . '/admin/content.php?tab=posts&tag=' . urlencode((string) $tag) . '&since=' . $recentCutoff . '"><strong>' . e((string) $tag) . '</strong></a> (' . (int) $count . ')';
+    $topTagEntriesThisYear[] = '<a href="' . base_path() . '/admin/content.php?tab=posts&tag=' . urlencode($tag) . '&since=' . $recentCutoff . '"><strong>' . e($tagDisplayNames[$tag] ?? $tag) . '</strong></a> (' . (int) $count . ')';
     if (++$n >= 5) break;
 }
 $topTagsThisYearLabel = $topTagEntriesThisYear ? implode(', ', $topTagEntriesThisYear) : t('admin.dashboard.stat_no_tags');
@@ -307,7 +310,7 @@ require __DIR__ . '/../includes/admin-head.php';
             <h2 class="dashboard-h2"><?= e(t('admin.dashboard.all_tags')) ?></h2>
             <ul class="dashboard-all-tags-list">
                 <?php foreach ($tagCounts as $tag => $count): ?>
-                    <li><a href="<?= base_path() ?>/admin/content.php?tab=posts&tag=<?= urlencode((string) $tag) ?>"><?= e((string) $tag) ?></a> <span class="dashboard-tag-count">(<?= (int) $count ?>)</span></li>
+                    <li><a href="<?= base_path() ?>/admin/content.php?tab=posts&tag=<?= urlencode($tag) ?>"><?= e($tagDisplayNames[$tag] ?? $tag) ?></a> <span class="dashboard-tag-count">(<?= (int) $count ?>)</span></li>
                 <?php endforeach; ?>
             </ul>
         </div>
