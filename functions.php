@@ -774,6 +774,24 @@ function format_datetime_for_display(?string $value, array $config, ?string $for
     return _lang_translate_date($dt->format($effectiveFormat));
 }
 
+function relative_time(int $timestamp): string
+{
+    $diff = max(0, time() - $timestamp);
+    if ($diff < 60) {
+        return t('admin.dashboard.time_just_now');
+    }
+    if ($diff < 3600) {
+        $n = (int) floor($diff / 60);
+        return t($n === 1 ? 'admin.dashboard.time_minute_ago' : 'admin.dashboard.time_minutes_ago', ['n' => $n]);
+    }
+    if ($diff < 86400) {
+        $n = (int) floor($diff / 3600);
+        return t($n === 1 ? 'admin.dashboard.time_hour_ago' : 'admin.dashboard.time_hours_ago', ['n' => $n]);
+    }
+    $n = (int) floor($diff / 86400);
+    return t($n === 1 ? 'admin.dashboard.time_day_ago' : 'admin.dashboard.time_days_ago', ['n' => $n]);
+}
+
 function format_post_date_for_rss(?string $value, array $config): string
 {
     $dt = parse_post_datetime_with_timezone($value, $config);
@@ -1923,12 +1941,15 @@ function build_tag_index(): bool
             continue;
         }
         foreach ($post['tags'] ?? [] as $tag) {
-            $tagSlug = normalize_tag((string) $tag);
+            $tag = trim((string) $tag);
+            $tagSlug = normalize_tag($tag);
             if ($tagSlug === '') {
                 continue;
             }
-            $index[$tagSlug] ??= [];
-            $index[$tagSlug][] = $slug;
+            if (!isset($index[$tagSlug])) {
+                $index[$tagSlug] = ['name' => $tag, 'posts' => []];
+            }
+            $index[$tagSlug]['posts'][] = $slug;
         }
     }
 
@@ -2099,6 +2120,51 @@ function cache_clear(): void
             @unlink($file);
         }
     }
+}
+
+function detect_current_pureblog_version(): string
+{
+    $versionFile = PUREBLOG_BASE_PATH . '/VERSION';
+    if (is_file($versionFile)) {
+        $raw = @file_get_contents($versionFile);
+        if (is_string($raw)) {
+            $fromFile = trim($raw);
+            if ($fromFile !== '') {
+                return $fromFile;
+            }
+        }
+    }
+
+    if (defined('PUREBLOG_VERSION') && is_string(PUREBLOG_VERSION) && PUREBLOG_VERSION !== '' && strtolower(PUREBLOG_VERSION) !== 'unknown') {
+        return PUREBLOG_VERSION;
+    }
+
+    return 'unknown';
+}
+
+function normalize_version_label(string $version): string
+{
+    $trimmed = trim($version);
+    if ($trimmed === '') {
+        return 'unknown';
+    }
+
+    return ltrim($trimmed, "vV");
+}
+
+function versions_match(string $current, string $latest): bool
+{
+    $a = strtolower(trim($current));
+    $b = strtolower(trim($latest));
+
+    if ($a === '' || $b === '') {
+        return false;
+    }
+
+    $a = ltrim($a, 'v');
+    $b = ltrim($b, 'v');
+
+    return $a === $b;
 }
 
 $_userFunctions = PUREBLOG_BASE_PATH . '/content/functions.php';

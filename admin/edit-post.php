@@ -371,7 +371,7 @@ require __DIR__ . '/../includes/admin-head.php';
 
         fetch(window.PureblogEditorConfig.basePath + '/content/tag-index.json')
             .then(r => r.ok ? r.json() : null)
-            .then(data => { if (data) allTags = Object.keys(data); })
+            .then(data => { if (data) allTags = Object.values(data).map(v => v.name); })
             .catch(() => {});
 
         function currentToken() {
@@ -414,14 +414,14 @@ require __DIR__ . '/../includes/admin-head.php';
             if (token.length === 0) { hide(); return; }
 
             const matches = allTags
-                .filter(t => t.startsWith(token) && !existing.includes(t))
+                .filter(t => t.toLowerCase().startsWith(token) && !existing.includes(t))
                 .slice(0, 10);
 
             if (matches.length === 0) { hide(); return; }
 
             matches.forEach(tag => {
                 const li = document.createElement('li');
-                li.textContent = tag;
+                li.textContent = tag.charAt(0).toUpperCase() + tag.slice(1);
                 li.addEventListener('mousedown', e => { e.preventDefault(); applySelection(tag); });
                 list.appendChild(li);
             });

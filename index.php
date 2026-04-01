@@ -85,8 +85,8 @@ $tagSlug = $isTag ? normalize_tag($tagParam) : '';
 $tagPosts = [];
 if ($isTag && $tagSlug !== '') {
     $tagIndex = load_tag_index();
-    if ($tagIndex !== null && isset($tagIndex[$tagSlug]) && is_array($tagIndex[$tagSlug])) {
-        $slugLookup = array_fill_keys($tagIndex[$tagSlug], true);
+    if ($tagIndex !== null && isset($tagIndex[$tagSlug]) && is_array($tagIndex[$tagSlug]['posts'] ?? null)) {
+        $slugLookup = array_fill_keys($tagIndex[$tagSlug]['posts'], true);
         $tagPosts = array_values(array_filter(get_all_posts(false), function (array $post) use ($slugLookup): bool {
             return isset($slugLookup[$post['slug'] ?? '']);
         }));
