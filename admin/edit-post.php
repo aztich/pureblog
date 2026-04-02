@@ -369,7 +369,7 @@ require __DIR__ . '/../includes/admin-head.php';
         let allTags = [];
         let activeIndex = -1;
 
-        fetch(window.PureblogEditorConfig.basePath + '/content/tag-index.json')
+        fetch(window.PureblogEditorConfig.basePath + '/content/tag-index.json?v=<?= e(PUREBLOG_VERSION) ?>')
             .then(r => r.ok ? r.json() : null)
             .then(data => { if (data) allTags = Object.values(data).map(v => v.name); })
             .catch(() => {});
