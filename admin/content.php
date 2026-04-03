@@ -254,7 +254,7 @@ require __DIR__ . '/../includes/admin-head.php';
                                 <select id="filter-tag" name="tag">
                                     <option value=""><?= e(t('admin.content.filter_all_tags')) ?></option>
                                     <?php foreach ($availableTags as $tagSlug => $tagDisplayName): ?>
-                                        <option value="<?= e($tagSlug) ?>"<?= $filterTag === $tagSlug ? ' selected' : '' ?>><?= e($tagDisplayName) ?></option>
+                                        <option value="<?= e((string) $tagSlug) ?>"<?= $filterTag === (string) $tagSlug ? ' selected' : '' ?>><?= e($tagDisplayName) ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
