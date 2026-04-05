@@ -405,11 +405,19 @@ function copy_path_recursive(string $source, string $destination): void
 {
     if (is_file($source)) {
         $parent = dirname($destination);
-        if (!is_dir($parent) && !@mkdir($parent, 0755, true) && !is_dir($parent)) {
-            throw new RuntimeException(t('admin.settings.updates.error_dir_create', ['path' => $parent]));
+        if (!is_dir($parent)) {
+            error_clear_last();
+            if (!@mkdir($parent, 0755, true) && !is_dir($parent)) {
+                $phpError = error_get_last();
+                $detail = $phpError !== null ? ' (' . $phpError['message'] . ')' : '';
+                throw new RuntimeException(t('admin.settings.updates.error_dir_create', ['path' => $parent]) . $detail);
+            }
         }
+        error_clear_last();
         if (!@copy($source, $destination)) {
-            throw new RuntimeException(t('admin.settings.updates.error_file_copy', ['path' => $source]));
+            $phpError = error_get_last();
+            $detail = $phpError !== null ? ' (' . $phpError['message'] . ')' : '';
+            throw new RuntimeException(t('admin.settings.updates.error_file_copy', ['path' => $source]) . $detail);
         }
         return;
     }
@@ -418,8 +426,13 @@ function copy_path_recursive(string $source, string $destination): void
         throw new RuntimeException(t('admin.settings.updates.error_source_missing', ['path' => $source]));
     }
 
-    if (!is_dir($destination) && !@mkdir($destination, 0755, true) && !is_dir($destination)) {
-        throw new RuntimeException(t('admin.settings.updates.error_dir_create', ['path' => $destination]));
+    if (!is_dir($destination)) {
+        error_clear_last();
+        if (!@mkdir($destination, 0755, true) && !is_dir($destination)) {
+            $phpError = error_get_last();
+            $detail = $phpError !== null ? ' (' . $phpError['message'] . ')' : '';
+            throw new RuntimeException(t('admin.settings.updates.error_dir_create', ['path' => $destination]) . $detail);
+        }
     }
 
     $items = scandir($source);
@@ -435,25 +448,26 @@ function copy_path_recursive(string $source, string $destination): void
         if (is_dir($src)) {
             copy_path_recursive($src, $dst);
         } else {
+            error_clear_last();
             if (!@copy($src, $dst)) {
-                throw new RuntimeException(t('admin.settings.updates.error_file_copy', ['path' => $src]));
+                $phpError = error_get_last();
+                $detail = $phpError !== null ? ' (' . $phpError['message'] . ')' : '';
+                throw new RuntimeException(t('admin.settings.updates.error_file_copy', ['path' => $src]) . $detail);
             }
         }
     }
 }
 
-function backup_core_paths(string $backupRoot): void
+/**
+ * @param list<string> $items Top-level item names (from the release zip) to back up.
+ *                            Only backing up what the update will overwrite prevents
+ *                            third-party directories (e.g. a FreshRSS install at /rss/)
+ *                            from being included in the backup and subsequently deleted
+ *                            during a rollback restore.
+ */
+function backup_core_paths(string $backupRoot, array $items): void
 {
-    // Exclude user data and recursive/cache paths; VERSION is a core file so it IS included.
-    $excludeFromBackup = ['backup', 'cache', 'config', 'content', 'data', '.htaccess'];
-    $items = scandir(PUREBLOG_BASE_PATH) ?: [];
     foreach ($items as $item) {
-        if ($item === '.' || $item === '..') {
-            continue;
-        }
-        if (in_array($item, $excludeFromBackup, true)) {
-            continue;
-        }
         $src = PUREBLOG_BASE_PATH . '/' . $item;
         if (!file_exists($src)) {
             continue;
@@ -646,18 +660,23 @@ function apply_release_update(string $zipballUrl, string $releaseTag = ''): arra
             return ['ok' => false, 'error' => t('admin.settings.updates.error_package_invalid')];
         }
 
-        $preservedHtaccessFiles = collect_existing_htaccess_files();
-        backup_core_paths($tmpBackup);
-
+        // Determine which top-level items the release zip will overwrite.
+        // This list drives both the backup (so only PB-owned paths are saved)
+        // and the copy loop below, avoiding any contact with third-party
+        // directories that happen to share the webroot.
         $preserveTop = preserved_top_level_paths();
-        $sourceItems = scandir($sourceRoot) ?: [];
-        foreach ($sourceItems as $item) {
-            if ($item === '.' || $item === '..') {
-                continue;
-            }
-            if (is_htaccess_path($item) || in_array($item, $preserveTop, true)) {
-                continue;
-            }
+        $coreItems = array_values(array_filter(
+            scandir($sourceRoot) ?: [],
+            fn(string $item): bool =>
+                $item !== '.' && $item !== '..' &&
+                !is_htaccess_path($item) &&
+                !in_array($item, $preserveTop, true)
+        ));
+
+        $preservedHtaccessFiles = collect_existing_htaccess_files();
+        backup_core_paths($tmpBackup, $coreItems);
+
+        foreach ($coreItems as $item) {
             $source = $sourceRoot . '/' . $item;
             $target = PUREBLOG_BASE_PATH . '/' . $item;
 
