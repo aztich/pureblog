@@ -1687,6 +1687,11 @@ function resolve_layout_file(string $name): ?string
     return resolve_template_file($name, PUREBLOG_BASE_PATH . '/content/includes', PUREBLOG_BASE_PATH . '/includes');
 }
 
+function find_include(string $name): ?string
+{
+    return resolve_template_file($name, PUREBLOG_BASE_PATH . '/content/includes', PUREBLOG_BASE_PATH . '/includes');
+}
+
 function resolve_template_file(string $name, string $userDir, string $coreDir): ?string
 {
     $name = trim($name);

@@ -177,7 +177,7 @@ $metaDescription = '';
 $postListLayout = $config['theme']['post_list_layout'] ?? 'excerpt';
 
 ?>
-<?php require __DIR__ . '/includes/header.php'; ?>
+<?php if ($__p = find_include('header')) require $__p; ?>
 <?php render_masthead_layout($config, ['post' => $post ?? null, 'page' => $page ?? null]); ?>
     <main>
         <!-- Tag archive view -->
@@ -190,7 +190,7 @@ $postListLayout = $config['theme']['post_list_layout'] ?? 'excerpt';
             <?php else: ?>
                 <?php
                 $paginationBase = base_path() . '/tag/' . rawurlencode($tagSlug);
-                require __DIR__ . '/includes/post-list.php';
+                if ($__p = find_include('post-list')) require $__p;
                 ?>
             <?php endif; ?>
         <?php else: ?>
@@ -199,7 +199,7 @@ $postListLayout = $config['theme']['post_list_layout'] ?? 'excerpt';
             <?php if (!$blogFeedHidden): ?>
                 <?php
                 $paginationBase = base_path() . '/';
-                require __DIR__ . '/includes/post-list.php';
+                if ($__p = find_include('post-list')) require $__p;
                 ?>
             <?php endif; ?>
         <?php endif; ?>

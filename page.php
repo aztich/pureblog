@@ -16,7 +16,7 @@ $blogFeedHidden = (($config['blog_page_slug'] ?? '') === '__hidden__');
 $searchPageSlug = trim((string) ($config['search_page_slug'] ?? 'search'));
 
 ?>
-<?php require __DIR__ . '/includes/header.php'; ?>
+<?php if ($__p = find_include('header')) require $__p; ?>
 <?php render_masthead_layout($config, ['page' => $page ?? null]); ?>
     <main>
         <?php if (!$page): ?>
@@ -44,7 +44,7 @@ $searchPageSlug = trim((string) ($config['search_page_slug'] ?? 'search'));
                 $paginationBase = $isHomepagePage ? '/' : ('/' . $page['slug']);
                 ?>
                 <section class="blog-feed">
-                    <?php require __DIR__ . '/includes/post-list.php'; ?>
+                    <?php if ($__p = find_include('post-list')) require $__p; ?>
                 </section>
             <?php endif; ?>
             <?php if ($isSearchPage): ?>
@@ -86,7 +86,7 @@ $searchPageSlug = trim((string) ($config['search_page_slug'] ?? 'search'));
                         <p><?= e(t('frontend.no_posts_found', ['search' => $query])) ?></p>
                     <?php else: ?>
                         <p><?= e($totalPosts === 1 ? t('frontend.search_result', ['n' => $totalPosts]) : t('frontend.search_results', ['n' => $totalPosts])) ?></p>
-                        <?php require __DIR__ . '/includes/post-list.php'; ?>
+                        <?php if ($__p = find_include('post-list')) require $__p; ?>
                     <?php endif; ?>
                 </section>
             <?php endif; ?>

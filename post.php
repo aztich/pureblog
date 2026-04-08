@@ -14,7 +14,7 @@ $pageTitle = $pageTitle ?? ($post['title'] ?? t('frontend.post_not_found'));
 $metaDescription = $metaDescription ?? (!empty($post['description']) ? $post['description'] : '');
 
 ?>
-<?php require __DIR__ . '/includes/header.php'; ?>
+<?php if ($__p = find_include('header')) require $__p; ?>
 <?php render_masthead_layout($config, ['post' => $post ?? null]); ?>
     <main>
         <?php if (!$post): ?>
