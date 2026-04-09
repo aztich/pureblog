@@ -782,7 +782,12 @@ function apply_release_update(string $zipballUrl, string $releaseTag = ''): arra
 
         // Restore files the user has opted to ignore.
         foreach ($savedIgnoredFiles as $relative => $content) {
-            @file_put_contents(PUREBLOG_BASE_PATH . '/' . $relative, $content);
+            $target = PUREBLOG_BASE_PATH . '/' . $relative;
+            $dir = dirname($target);
+            if (!is_dir($dir)) {
+                @mkdir($dir, 0755, true);
+            }
+            @file_put_contents($target, $content);
         }
 
         // Flush the opcode cache so the next request immediately picks up
