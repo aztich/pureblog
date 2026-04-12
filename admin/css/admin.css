@@ -234,6 +234,7 @@ input[type="email"],
 input[type="search"],
 input[type="password"],
 input[type="number"],
+input[type="url"],
 input[type="file"],
 textarea,
 select {
@@ -786,7 +787,8 @@ th, td {
     min-height: 420px;
 }
 
-.editor-main input[type="text"] {
+.editor-main input[type="text"],
+.editor-main input[type="url"] {
     max-width: 100%;
 }
 
