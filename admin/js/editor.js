@@ -427,10 +427,11 @@
           throw new Error('Upload failed');
         }
 
-        const alt = file.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ');
-        const pathBase = `/content/images/${slugValue}`;
-        const url = `${pathBase}/${file.name}`;
-        const markdown = `![${alt}](${url})`;
+        const redirectUrl = new URL(response.url);
+        const markdown = redirectUrl.searchParams.get('uploaded');
+        if (!markdown) {
+          throw new Error(redirectUrl.searchParams.get('upload_error') || 'Upload failed');
+        }
         const doc = cm.getDoc();
         const cursor = doc.getCursor();
         doc.replaceRange(markdown, cursor);

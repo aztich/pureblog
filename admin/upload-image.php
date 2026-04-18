@@ -63,8 +63,7 @@ if ($error === '') {
 
 if ($error === '') {
     $filename = basename($_FILES['image']['name']);
-    $filename = strtolower($filename);
-    $filename = preg_replace('/[^a-z0-9._-]/', '-', $filename) ?? $filename;
+    $filename = preg_replace('/[^a-zA-Z0-9._-]/', '-', $filename) ?? $filename;
     $filename = preg_replace('/-+/', '-', $filename) ?? $filename;
     $filename = trim($filename, '-');
     $ext = pathinfo($filename, PATHINFO_EXTENSION);
@@ -81,6 +80,12 @@ if ($error === '') {
         if (!move_uploaded_file($_FILES['image']['tmp_name'], $destination)) {
             $error = t('admin.editor.error_upload_save');
         } else {
+            call_hook('on_image_uploaded', [$destination]);
+            $webpDestination = preg_replace('/\.[^.]+$/', '.webp', $destination) ?? $destination;
+            if ($webpDestination !== $destination && file_exists($webpDestination)) {
+                $destination = $webpDestination;
+            }
+            $filename = basename($destination);
             $url = base_path() . '/content/images/' . $folder . '/' . $filename;
             $altText = pathinfo($filename, PATHINFO_FILENAME) ?: 'image';
             $message = '![' . $altText . '](' . $url . ')';

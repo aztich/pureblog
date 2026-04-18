@@ -64,7 +64,7 @@ $isSquareOgImage = $ogImagePreferred === 'square';
             <meta property="og:image:height" content="600">
         <?php endif; ?>
     <?php endif; ?>
-    <link rel="alternate" type="application/rss+xml" title="<?= e($config['site_title']) ?> RSS" href="<?= base_path() ?>/feed.php">
+    <link rel="alternate" type="application/rss+xml" title="<?= e($config['site_title']) ?> RSS" href="<?= base_path() ?>/feed">
     <style>
         body { background: <?= e($config['theme']['background_color']) ?>; }
     </style>
