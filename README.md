@@ -12,6 +12,16 @@ Pure Blog is a simple, flat‑file blogging platform with a Markdown‑first edi
 - Built-in search that helps readers find exactly what they’re looking for.
 - A settings page that allows you to customise and configure your blog.
 
+## Requirements
+
+- PHP 8.1 or newer
+- A standard web server (Apache or Nginx)
+- **Required PHP extensions:** `mbstring`, `xml`
+- **Recommended PHP extensions:** `curl`, `zip`
+- Write access to `/config`, `/content`, and `/data`
+
+> **Nginx users:** you will also need `php-fpm` configured alongside Nginx, as PHP-FPM is required to process PHP when not using Apache.
+
 ## Getting started
 All you need to run Pure Blog is a host that supports PHP (pretty much all of them do). Once you have that, all you need to do is:
 
