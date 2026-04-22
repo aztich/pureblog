@@ -74,10 +74,10 @@ $reservedPaths = [
 $isSingle = !$isTag && $requestPath !== ''
     && !str_contains($requestPath, '.')
     && !in_array($requestPath, $reservedPaths, true)
-    && !str_starts_with($requestPath, 'admin')
-    && !str_starts_with($requestPath, 'assets')
-    && !str_starts_with($requestPath, 'content')
-    && !str_starts_with($requestPath, 'config');
+    && !str_starts_with($requestPath, 'admin/')
+    && !str_starts_with($requestPath, 'assets/')
+    && !str_starts_with($requestPath, 'content/')
+    && !str_starts_with($requestPath, 'config/');
 
 $pageData = $isSingle ? get_page_by_slug($requestPath, false) : null;
 $post = $isSingle && !$pageData ? get_post_by_slug($requestPath, false) : null;
@@ -130,10 +130,10 @@ if (
     && $requestPath !== ''
     && str_contains($requestPath, '.')
     && !in_array($requestPath, $reservedPaths, true)
-    && !str_starts_with($requestPath, 'admin')
-    && !str_starts_with($requestPath, 'assets')
-    && !str_starts_with($requestPath, 'content')
-    && !str_starts_with($requestPath, 'config')
+    && !str_starts_with($requestPath, 'admin/')
+    && !str_starts_with($requestPath, 'assets/')
+    && !str_starts_with($requestPath, 'content/')
+    && !str_starts_with($requestPath, 'config/')
     && !is_file(__DIR__ . '/' . $requestPath)
 ) {
     require __DIR__ . '/404.php';
