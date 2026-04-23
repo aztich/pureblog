@@ -81,6 +81,7 @@ return [
             'setup_complete' => 'Einrichtung abgeschlossen. Anmelden, um fortzufahren.',
             'username'       => 'Benutzername',
             'password'       => 'Passwort',
+            'remember_me'    => 'Angemeldet bleiben',
             'submit'         => 'Anmelden',
             'error_invalid'  => 'Ungültige Anmeldedaten.',
             'error_lockout'  => 'Zu viele ungültige Versuche. Versuch es in {minutes} Minute(n) erneut.',

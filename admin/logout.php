@@ -14,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 verify_csrf();
+clear_remember_me_cookie();
 $_SESSION = [];
 session_destroy();
 

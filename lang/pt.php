@@ -73,6 +73,7 @@ return [
             'setup_complete' => 'Configuração concluída. Inicia a sessão para continuar.',
             'username'       => 'Nome de utilizador',
             'password'       => 'Palavra-passe',
+            'remember_me'    => 'Lembrar-me',
             'submit'         => 'Iniciar sessão',
             'error_invalid'  => 'Credenciais inválidas.',
             'error_lockout'  => 'Demasiadas tentativas falhadas. Tenta novamente em {minutes} minuto(s).',

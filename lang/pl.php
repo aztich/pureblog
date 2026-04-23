@@ -74,6 +74,7 @@ return [
             'setup_complete' => 'Konfiguracja zakończona. Zaloguj się, aby kontynuować.',
             'username'       => 'Użytkownik',
             'password'       => 'Hasło',
+            'remember_me'    => 'Zapamiętaj mnie',
             'submit'         => 'Zaloguj',
             'error_invalid'  => 'Nieprawidłowy użytkownik lub hasło.',
             'error_lockout'  => 'Zbyt dużo nieudanych prób. Spróbuj ponownie za {minutes} minut.',

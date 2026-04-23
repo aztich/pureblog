@@ -74,6 +74,7 @@ return [
             'setup_complete' => 'Setup complete. Log in to continue.',
             'username'       => 'Username',
             'password'       => 'Password',
+            'remember_me'    => 'Remember me',
             'submit'         => 'Log in',
             'error_invalid'  => 'Invalid credentials.',
             'error_lockout'  => 'Too many failed attempts. Try again in {minutes} minute(s).',

@@ -74,6 +74,7 @@ return [
             'setup_complete' => 'Configurare finalizată. Autentifică-te pentru a continua.',
             'username'       => 'Nume de utilizator',
             'password'       => 'Parolă',
+            'remember_me'    => 'Ține-mă minte',
             'submit'         => 'Autentificare',
             'error_invalid'  => 'Date de autentificare incorecte.',
             'error_lockout'  => 'Prea multe încercări eșuate. Încearcă din nou în {minutes} minut(e).',

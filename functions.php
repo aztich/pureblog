@@ -458,8 +458,47 @@ function is_admin_logged_in(): bool
     return !empty($_SESSION['is_admin']);
 }
 
+function remember_me_token(array $config): string
+{
+    return hash_hmac('sha256', 'pureblog_remember_me', $config['admin_password_hash'] ?? '');
+}
+
+function set_remember_me_cookie(array $config): void
+{
+    $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+        || (isset($_SERVER['SERVER_PORT']) && (int) $_SERVER['SERVER_PORT'] === 443);
+    setcookie('pb_remember', remember_me_token($config), [
+        'expires'  => time() + (90 * 24 * 60 * 60),
+        'path'     => '/',
+        'secure'   => $isHttps,
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
+}
+
+function clear_remember_me_cookie(): void
+{
+    setcookie('pb_remember', '', ['expires' => time() - 3600, 'path' => '/']);
+}
+
+function maybe_restore_admin_from_cookie(): void
+{
+    if (is_admin_logged_in()) {
+        return;
+    }
+    $cookie = $_COOKIE['pb_remember'] ?? '';
+    if ($cookie === '') {
+        return;
+    }
+    $config = load_config();
+    if (hash_equals(remember_me_token($config), $cookie)) {
+        $_SESSION['is_admin'] = true;
+    }
+}
+
 function require_admin_login(): void
 {
+    maybe_restore_admin_from_cookie();
     if (!is_admin_logged_in()) {
         header('Location: ' . base_path() . '/admin/index.php');
         exit;

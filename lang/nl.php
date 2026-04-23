@@ -74,6 +74,7 @@ return [
             'setup_complete' => 'Alles staat klaar. Log in om door te gaan.',
             'username'       => 'Gebruikersnaam',
             'password'       => 'Wachtwoord',
+            'remember_me'    => 'Onthoud mij',
             'submit'         => 'Log in',
             'error_invalid'  => 'Foute gegevens.',
             'error_lockout'  => 'Te veel mislukte pogingen. Probeer het nogmaals in {minutes} minuten.',

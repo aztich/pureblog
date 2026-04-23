@@ -7,6 +7,7 @@ require __DIR__ . '/../functions.php';
 require_setup_redirect();
 
 start_admin_session();
+maybe_restore_admin_from_cookie();
 
 $config = load_config();
 $fontStack = font_stack_css($config['theme']['admin_font_stack'] ?? 'sans');
@@ -39,6 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['is_admin'] = true;
             $_SESSION['login_failures'] = 0;
             $_SESSION['lockout_until'] = 0;
+            if (!empty($_POST['remember_me'])) {
+                set_remember_me_cookie($config);
+            }
             $adminLanding = ($config['admin_homepage'] ?? 'dashboard') === 'content' ? 'content.php' : 'dashboard.php';
             header('Location: ' . base_path() . '/admin/' . $adminLanding);
             exit;
@@ -76,6 +80,11 @@ require __DIR__ . '/../includes/admin-head.php';
 
             <label for="password"><?= e(t('admin.login.password')) ?></label>
             <input type="password" id="password" name="password" required<?= $isLockedOut ? ' disabled' : '' ?>>
+
+            <label class="checkbox-label">
+                <input type="checkbox" name="remember_me" value="1"<?= $isLockedOut ? ' disabled' : '' ?>>
+                <?= e(t('admin.login.remember_me')) ?>
+            </label>
             <button type="submit"<?= $isLockedOut ? ' disabled' : '' ?>><svg class="icon" aria-hidden="true"><use href="#icon-circle-check"></use></svg> <?= e(t('admin.login.submit')) ?></button>
         </form>
     </main>

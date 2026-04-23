@@ -74,6 +74,7 @@ return [
             'setup_complete'  => 'Configuration terminée. Connectez-vous pour continuer.',
             'username'        => 'Nom d’utilisateur',
             'password'        => 'Mot de passe',
+            'remember_me'     => 'Se souvenir de moi',
             'submit'          => 'Se connecter',
             'error_invalid'   => 'Identifiants incorrects.',
             'error_lockout'   => 'Trop de tentatives échouées. Réessayez dans {minutes} minutes.',

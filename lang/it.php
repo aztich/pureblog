@@ -73,6 +73,7 @@ return [
             'setup_complete'  => 'Configurazione completata. Accedi per continuare.',
             'username'        => 'Nome utente',
             'password'        => 'Password',
+            'remember_me'     => 'Ricordami',
             'submit'          => 'Accedi',
             'error_invalid'   => 'Credenziali non valide.',
             'error_lockout'   => 'Troppi tentativi falliti. Riprova tra {minutes} minuto/i.',

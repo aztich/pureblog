@@ -74,6 +74,7 @@ return [
             'setup_complete' => 'Configuración completada. Inicia sesión para continuar.',
             'username'       => 'Usuario',
             'password'       => 'Contraseña',
+            'remember_me'    => 'Recuérdame',
             'submit'         => 'Iniciar sesión',
             'error_invalid'  => 'Credenciales no válidas.',
             'error_lockout'  => 'Demasiados intentos fallidos. Inténtalo de nuevo en {minutes} minuto(s).',
