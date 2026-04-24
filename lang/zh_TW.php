@@ -58,8 +58,8 @@ return [
         ],
 
         'login' => [
-            'page_title'     => '管理者登入 - Pure Blog',
-            'heading'        => '管理者登入',
+            'page_title'     => '管理員登入 - Pure Blog',
+            'heading'        => '管理員登入',
             'setup_complete' => '設定完成，請登入以繼續。',
             'username'       => '使用者名稱',
             'password'       => '密碼',
@@ -205,7 +205,7 @@ return [
         ],
 
         'notices' => [
-            'lang_missing'        => '語言檔案遺失，這可能發生在從 1.9.7 更新之後。',
+            'lang_missing'        => '語言檔案遺失，這可能發生在從 1.9.7 版更新之後。',
             'lang_missing_repair' => '點此自動修復',
         ],
 
@@ -269,8 +269,8 @@ return [
         ],
 
         'footer' => [
-            'created_by' => '由',
-            'docs'       => '閱讀文件',
+            'created_by' => 'was created with 💙 by',
+            'docs'       => '說明文件',
             'mastodon'   => 'Mastodon',
             'source'     => '原始碼',
         ],
@@ -309,7 +309,7 @@ return [
                 'og_banner'          => '橫幅（預設）',
                 'og_square'          => '正方形',
                 'custom_nav'         => '自訂導覽項目',
-                'custom_routes'      => '自訂路由',
+                'custom_routes'      => '自訂路徑',
                 'homepage_default'   => '部落格文章（預設）',
                 'blog_use_homepage'  => '使用首頁',
                 'blog_hidden'        => '隱藏（停用部落格頁面）',
@@ -324,9 +324,9 @@ return [
                 'header_injects'          => '標頭注入',
                 'head_inject_page_label'  => '頁面 head HTML',
                 'head_inject_post_label'  => '文章 head HTML',
-                'footer_injects'          => '頁尾注入',
-                'footer_inject_page_label'=> '頁面頁尾 HTML',
-                'footer_inject_post_label'=> '文章頁尾 HTML',
+                'footer_injects'          => '頁腳注入',
+                'footer_inject_page_label'=> '頁面頁腳 HTML',
+                'footer_inject_post_label'=> '文章頁腳 HTML',
                 'notice_updated'     => '設定已更新。',
                 'error_save'         => '儲存設定失敗。',
                 'error_title'        => '網站標題為必填欄位。',
